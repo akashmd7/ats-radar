@@ -25,6 +25,7 @@ Standard library only. No dependencies.
 """
 
 import argparse
+import http.client
 import html
 import json
 import os
@@ -32,12 +33,15 @@ import re
 import smtplib
 import sqlite3
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from xml.etree import ElementTree
 from pathlib import Path
 
 UA = "Mozilla/5.0 (compatible; job-radar/2.0)"
@@ -70,6 +74,10 @@ DEFAULTS = {
         "resolve_vague_locations": True,
         "dedupe_reposts": True,
         "drop_after_days": 45,
+        "max_workers": 4,
+        "retries": 2,
+        "max_company_seconds": 240,
+        "keep_unresolved_locations": False,
     },
     "companies": [],
 }
@@ -130,12 +138,28 @@ def parse_careers_url(url, ats_hint=None):
             ats = "smartrecruiters"
         elif "ashbyhq.com" in host:
             ats = "ashby"
+        elif "successfactors." in host or "sapsf." in host:
+            ats = "successfactors"
+        elif "oraclecloud.com" in host:
+            ats = "oracle"
+        elif "amazon.jobs" in host:
+            ats = "amazon"
+        elif "icims.com" in host:
+            raise ParseError(
+                "iCIMS renders jobs as HTML with no public JSON feed, so it is "
+                "not supported. Track this company with a LinkedIn job alert "
+                "instead, or set \"enabled\": false to silence this.")
+        elif "taleo.net" in host:
+            raise ParseError(
+                "Taleo exposes a per-portal REST endpoint that differs by "
+                "tenant and is not supported. Track this company with a "
+                "LinkedIn job alert, or set \"enabled\": false.")
         else:
             raise ParseError(
-                "Unrecognised ATS for host '" + host + "'. Supported: "
-                "myworkdayjobs.com, greenhouse.io, lever.co, smartrecruiters.com, "
-                "ashbyhq.com. Set \"ats\" explicitly if you know it."
-            )
+                "Unrecognised ATS for host '" + host + "'. This is probably a "
+                "vanity domain in front of a real ATS - run "
+                "'python job_monitor.py --identify " + url + "' to find out "
+                "which one, then use that URL instead.")
 
     if ats == "workday":
         parts = host.split(".")
@@ -171,19 +195,40 @@ def parse_careers_url(url, ats_hint=None):
             raise ParseError("Could not find the Ashby organisation name")
         return {"ats": "ashby", "org": real[0], "label": real[0]}
 
+    if ats == "successfactors":
+        company = query.get("company", [None])[0]
+        if not company:
+            raise ParseError(
+                "SuccessFactors URL must contain ?company=... - open the "
+                "careers page, run a search, and copy the URL from the bar")
+        return {"ats": "successfactors", "host": host, "company": company,
+                "label": company + " @ " + host}
+
+    if ats == "oracle":
+        return {"ats": "oracle", "host": host,
+                "site": query.get("siteNumber", [None])[0],
+                "label": host}
+
+    if ats == "amazon":
+        region = query.get("loc_query", ["India"])[0]
+        return {"ats": "amazon", "region": region,
+                "label": "amazon.jobs (" + region + ")"}
+
     raise ParseError("Unsupported ats '" + str(ats) + "'")
 
 
 def resolve_companies(cfg, only=None):
-    """Attach parsed source info to each company. Returns (ok, failed)."""
-    ok, failed = [], []
+    """Attach parsed source info to each company.
+    Returns (ok, failed, disabled)."""
+    ok, failed, disabled = [], [], []
     wanted = {n.strip().lower() for n in only} if only else None
 
     for c in cfg["companies"]:
         name = c.get("name") or c.get("url", "?")
-        if c.get("enabled") is False:
-            continue
         if wanted and name.lower() not in wanted:
+            continue
+        if c.get("enabled") is False:
+            disabled.append((name, c.get("note", "no reason recorded")))
             continue
         try:
             src = parse_careers_url(c.get("url", ""), c.get("ats"))
@@ -191,36 +236,113 @@ def resolve_companies(cfg, only=None):
             failed.append((name, str(e)))
             continue
         ok.append({**c, "name": name, "source": src})
-    return ok, failed
+    return ok, failed, disabled
 
 
 # ---------------------------------------------------------------------------
 # HTTP
 # ---------------------------------------------------------------------------
 
+# Requests to the same ATS backend are spaced globally, not just per thread.
+# cat.wd5, gsk.wd5 and visa.wd5 are separate tenants on shared Workday
+# infrastructure, so six workers hitting them at once reads as one bursty IP
+# and the far end starts dropping connections.
+_HOST_GATE = {}
+_GATE_LOCK = threading.Lock()
+PRINT_LOCK = threading.Lock()
+
+RETRYABLE = (urllib.error.URLError, http.client.HTTPException,
+             OSError, TimeoutError)
+
+
+def host_group(url):
+    host = urllib.parse.urlparse(url).netloc.lower()
+    parts = host.split(".")
+    return ".".join(parts[-3:]) if len(parts) >= 3 else host
+
+
+def wait_turn(url, delay):
+    """Block until this host group is allowed another request."""
+    key = host_group(url)
+    while True:
+        with _GATE_LOCK:
+            now = time.monotonic()
+            nxt = _HOST_GATE.get(key, 0.0)
+            if now >= nxt:
+                _HOST_GATE[key] = now + delay
+                return
+            wait = nxt - now
+        time.sleep(min(wait, 5.0))
+
+
 class Http:
-    def __init__(self, delay, timeout):
+    def __init__(self, delay, timeout, log=print, retries=2, deadline=None):
         self.delay = delay
         self.timeout = timeout
+        self.log = log
+        self.retries = retries
+        self.deadline = deadline
+        self.warned_budget = False
         self.calls = 0
+
+    def out_of_time(self):
+        return self.deadline is not None and time.monotonic() > self.deadline
+
+    def _fetch(self, url, payload, accept):
+        """One request with retries. Returns raw text, or None on failure."""
+        headers = {"User-Agent": UA, "Accept": accept}
+        data = None
+        if payload is not None:
+            data = json.dumps(payload).encode()
+            headers["Content-Type"] = "application/json"
+
+        for attempt in range(self.retries + 1):
+            if self.out_of_time():
+                if not self.warned_budget:
+                    self.warned_budget = True
+                    self.log("     ! time budget exhausted, stopping here "
+                             "with partial results")
+                return None
+            wait_turn(url, self.delay)
+            self.calls += 1
+            try:
+                req = urllib.request.Request(url, data=data, headers=headers)
+                with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                    return r.read().decode("utf-8", "replace")
+            except urllib.error.HTTPError as e:
+                # 4xx other than rate limiting will not improve on retry
+                if e.code != 429 and e.code < 500:
+                    self.log("     ! HTTP " + str(e.code) + ": " + url[:80])
+                    return None
+                last = e
+            except RETRYABLE as e:
+                last = e
+            if attempt < self.retries:
+                time.sleep(1.5 * (attempt + 1))
+
+        self.log("     ! " + type(last).__name__ + " after "
+                 + str(self.retries + 1) + " tries: " + url[:70])
+        return None
 
     def json(self, url, payload=None):
         if not url:
             return None
-        time.sleep(self.delay)
-        self.calls += 1
-        data = json.dumps(payload).encode() if payload is not None else None
-        headers = {"User-Agent": UA, "Accept": "application/json"}
-        if data:
-            headers["Content-Type"] = "application/json"
-        req = urllib.request.Request(url, data=data, headers=headers)
-        try:
-            with urllib.request.urlopen(req, timeout=self.timeout) as r:
-                return json.loads(r.read().decode("utf-8", "replace"))
-        except (urllib.error.HTTPError, urllib.error.URLError,
-                json.JSONDecodeError, TimeoutError, ValueError) as e:
-            print("     ! " + type(e).__name__ + ": " + url[:90])
+        body = self._fetch(url, payload, "application/json")
+        if body is None:
             return None
+        try:
+            return json.loads(body)
+        except (json.JSONDecodeError, ValueError):
+            self.log("     ! response was not JSON: " + url[:80])
+            return None
+
+
+    def text(self, url):
+        """Fetch raw text. Used for XML feeds and ATS identification."""
+        if not url:
+            return ""
+        return self._fetch(
+            url, None, "text/html,application/xhtml+xml,application/xml") or ""
 
 
 # ---------------------------------------------------------------------------
@@ -272,7 +394,7 @@ def days_from_epoch_ms(value):
 # Fetchers - each returns a list of job dicts
 # ---------------------------------------------------------------------------
 
-def fetch_workday(http, src, cfg, terms):
+def fetch_workday(http, src, cfg, terms, log=print):
     base = "https://" + src["host"]
     cxs = base + "/wday/cxs/" + src["tenant"] + "/" + src["site"]
     api = cxs + "/jobs"
@@ -282,10 +404,14 @@ def fetch_workday(http, src, cfg, terms):
     for term in terms:
         offset, total = 0, None
         while True:
+            if http.out_of_time():
+                break
             body = {"appliedFacets": {}, "limit": 20,
                     "offset": offset, "searchText": term}
             data = http.json(api, body)
             if not data or not data.get("jobPostings"):
+                # A failed page ends this term's sweep but keeps whatever the
+                # other terms already collected.
                 break
             if total is None:
                 total = data.get("total", 0)
@@ -324,7 +450,7 @@ def resolve_workday_location(http, job):
     return ", ".join(p for p in parts if p) or job["location"]
 
 
-def fetch_greenhouse(http, src, cfg, terms):
+def fetch_greenhouse(http, src, cfg, terms, log=print):
     url = ("https://boards-api.greenhouse.io/v1/boards/"
            + src["board"] + "/jobs?content=false")
     data = http.json(url)
@@ -344,7 +470,7 @@ def fetch_greenhouse(http, src, cfg, terms):
     return out
 
 
-def fetch_lever(http, src, cfg, terms):
+def fetch_lever(http, src, cfg, terms, log=print):
     url = "https://api.lever.co/v0/postings/" + src["company"] + "?mode=json"
     data = http.json(url)
     if not isinstance(data, list):
@@ -363,7 +489,7 @@ def fetch_lever(http, src, cfg, terms):
     return out
 
 
-def fetch_smartrecruiters(http, src, cfg, terms):
+def fetch_smartrecruiters(http, src, cfg, terms, log=print):
     out, offset = [], 0
     max_offset = max(cfg["runtime"]["max_offset"], 100)
     while offset < max_offset:
@@ -392,7 +518,7 @@ def fetch_smartrecruiters(http, src, cfg, terms):
     return out
 
 
-def fetch_ashby(http, src, cfg, terms):
+def fetch_ashby(http, src, cfg, terms, log=print):
     url = ("https://api.ashbyhq.com/posting-api/job-board/" + src["org"]
            + "?includeCompensation=true")
     data = http.json(url)
@@ -412,12 +538,221 @@ def fetch_ashby(http, src, cfg, terms):
     return out
 
 
+BAD_XML_CHARS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
+BARE_AMP = re.compile(r"&(?!#?\w+;)")
+JOB_BLOCK = re.compile(r"<job\b.*?</job>", re.IGNORECASE | re.DOTALL)
+
+
+def clean_xml(raw):
+    raw = raw.lstrip("\ufeff \t\r\n")
+    raw = BAD_XML_CHARS.sub("", raw)
+    return BARE_AMP.sub("&amp;", raw)
+
+
+FIELD_ALIASES = {
+    "title": ("title", "jobtitle", "name"),
+    "location": ("location", "city", "joblocation", "primarylocation"),
+    "posted": ("postdate", "postingdate", "pubdate", "date", "startdate"),
+    "id": ("jobid", "id", "requisitionid", "guid", "jobreqid"),
+    "url": ("url", "link", "joburl", "applyurl"),
+}
+TAG_STRIP = re.compile(r"<[^>]+>")
+
+
+def scrape_feed_record(block):
+    """Last-resort field extraction for feed records that won't parse as XML,
+    typically because a description field contains raw unescaped HTML."""
+    found = {}
+    for field, aliases in FIELD_ALIASES.items():
+        for alias in aliases:
+            m = re.search(r"<" + alias + r"\b[^>]*>(.*?)</" + alias + r">",
+                          block, re.IGNORECASE | re.DOTALL)
+            if not m:
+                continue
+            value = m.group(1)
+            value = re.sub(r"<!\[CDATA\[(.*?)\]\]>", r"\1", value, flags=re.DOTALL)
+            value = TAG_STRIP.sub(" ", value)
+            value = html.unescape(value)
+            value = " ".join(value.split())
+            if value:
+                found[field] = value
+                break
+    return found
+
+
+def fetch_successfactors(http, src, cfg, terms, log=print):
+    """SAP's standard XML jobs feed. Field names vary by tenant config, so
+    each value is looked up across several likely tag names. Some tenants
+    emit slightly malformed XML, so bad records are skipped individually
+    rather than losing the whole feed."""
+    url = ("https://" + src["host"] + "/career?company=" + src["company"]
+           + "&career_ns=job_listing_summary&resultType=XML")
+    raw = http.text(url)
+    if not raw.strip():
+        return []
+
+    head = raw.lstrip()[:200].lower()
+    if head.startswith("<!doctype html") or head.startswith("<html"):
+        log("     ! tenant returned a web page, not the XML feed - either the "
+            "feed is switched off or the company id is wrong")
+        return []
+
+    cleaned = clean_xml(raw)
+    nodes = []
+    try:
+        nodes = list(ElementTree.fromstring(cleaned).iter())
+    except ElementTree.ParseError as e:
+        # One malformed record shouldn't cost the whole feed. Pull out each
+        # <job> block and parse them one at a time, dropping only the bad ones.
+        blocks = JOB_BLOCK.findall(cleaned)
+        if not blocks:
+            log("     ! feed is not valid XML and has no readable <job> "
+                "records: " + str(e))
+            return []
+        bad = 0
+        for b in blocks:
+            try:
+                nodes.append(ElementTree.fromstring(b))
+            except ElementTree.ParseError:
+                bad += 1
+        if nodes:
+            log("     feed was malformed; recovered " + str(len(nodes))
+                + " records, skipped " + str(bad))
+        else:
+            # Every record failed, so the whole feed is structurally unusable -
+            # usually raw HTML inside description fields. Pull fields out with
+            # text matching instead of parsing.
+            recovered = [scrape_feed_record(b) for b in blocks]
+            recovered = [r for r in recovered if r.get("title")]
+            log("     feed is not parseable as XML; extracted "
+                + str(len(recovered)) + " of " + str(len(blocks))
+                + " records by text matching")
+            out = []
+            for r in recovered:
+                out.append({
+                    "id": r.get("id") or r["title"],
+                    "title": r["title"],
+                    "location": r.get("location", ""),
+                    "url": r.get("url") or url,
+                    "posted": r.get("posted", ""),
+                    "age_days": days_from_iso(r.get("posted", "")),
+                })
+            return out
+
+    def pick(node, names):
+        for n in names:
+            for child in node:
+                tag = child.tag.split("}")[-1].lower()
+                if tag == n and (child.text or "").strip():
+                    return child.text.strip()
+        return ""
+
+    out = []
+    for node in nodes:
+        if node.tag.split("}")[-1].lower() not in ("job", "item"):
+            continue
+        title = pick(node, ["title", "jobtitle", "name"])
+        if not title:
+            continue
+        posted = pick(node, ["postdate", "date", "pubdate", "postingdate"])
+        jid = pick(node, ["jobid", "id", "requisitionid", "guid"]) or title
+        link = pick(node, ["url", "link", "joburl", "applyurl"])
+        out.append({
+            "id": jid,
+            "title": title,
+            "location": pick(node, ["location", "city", "joblocation"]),
+            "url": link or url,
+            "posted": posted,
+            "age_days": days_from_iso(posted),
+        })
+    return out
+
+
+ORACLE_SITE = re.compile(r"siteNumber[\"'\s:=]+(CX_\d+)")
+
+
+def fetch_oracle(http, src, cfg, terms, log=print):
+    """Oracle Recruiting Cloud. Needs a site number, which is embedded in the
+    careers page HTML rather than the URL."""
+    site = src.get("site")
+    if not site:
+        page = http.text("https://" + src["host"]
+                         + "/hcmUI/CandidateExperience/en/sites/jobsearch")
+        m = ORACLE_SITE.search(page)
+        if not m:
+            log("     ! could not find siteNumber - open the careers page, "
+                "view source, search for siteNumber and add it to the URL as "
+                "?siteNumber=CX_xxxx")
+            return []
+        site = m.group(1)
+        log("     discovered siteNumber " + site)
+
+    api = ("https://" + src["host"]
+           + "/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+           + "?onlyData=true&expand=requisitionList"
+           + "&finder=findReqs;siteNumber=" + site
+           + ",limit=200,sortBy=POSTING_DATES_DESC")
+    data = http.json(api)
+    if not data:
+        return []
+
+    out = []
+    for item in data.get("items", []):
+        for j in item.get("requisitionList", []):
+            posted = j.get("PostedDate") or ""
+            jid = str(j.get("Id") or j.get("RequisitionId") or "")
+            out.append({
+                "id": jid,
+                "title": (j.get("Title") or "").strip(),
+                "location": (j.get("PrimaryLocation")
+                             or j.get("Location") or "").strip(),
+                "url": ("https://" + src["host"]
+                        + "/hcmUI/CandidateExperience/en/sites/jobsearch/job/"
+                        + jid),
+                "posted": posted,
+                "age_days": days_from_iso(posted),
+            })
+    return out
+
+
+def fetch_amazon(http, src, cfg, terms, log=print):
+    seen, out = set(), []
+    for term in terms:
+        url = ("https://www.amazon.jobs/en/search.json?radius=100km"
+               + "&result_limit=100&sort=recent"
+               + "&country%5B%5D=IND"
+               + "&loc_query=" + urllib.parse.quote(src.get("region", "India"))
+               + "&base_query=" + urllib.parse.quote(term))
+        data = http.json(url)
+        if not data:
+            continue
+        for j in data.get("jobs", []):
+            jid = str(j.get("id_icims") or j.get("id") or j.get("job_path", ""))
+            if jid in seen:
+                continue
+            seen.add(jid)
+            posted = j.get("posted_date") or ""
+            out.append({
+                "id": jid,
+                "title": (j.get("title") or "").strip(),
+                "location": (j.get("normalized_location")
+                             or j.get("location") or "").strip(),
+                "url": "https://www.amazon.jobs" + (j.get("job_path") or ""),
+                "posted": posted,
+                "age_days": days_from_iso(posted),
+            })
+    return out
+
+
 FETCHERS = {
     "workday": fetch_workday,
     "greenhouse": fetch_greenhouse,
     "lever": fetch_lever,
     "smartrecruiters": fetch_smartrecruiters,
     "ashby": fetch_ashby,
+    "successfactors": fetch_successfactors,
+    "oracle": fetch_oracle,
+    "amazon": fetch_amazon,
 }
 
 
@@ -453,23 +788,27 @@ def in_target_city(job, filters):
 
 
 def location_ok(job, filters, ats, http, cfg):
+    """Returns (keep, unresolved). 'unresolved' means the posting had no usable
+    location and no way to look one up - counted separately so a feed with
+    empty location fields is visible rather than silently passing everything."""
     kws = filters["location_keywords"]
     if not kws:
-        return True
+        return True, False
     loc = (job.get("location") or "").lower()
     if any(k in loc for k in kws):
-        return True
+        return True, False
 
     vague = (not loc.strip()) or any(v in loc for v in VAGUE_LOCATION)
     if not vague:
-        return False
+        return False, False
 
     if ats == "workday" and cfg["runtime"]["resolve_vague_locations"]:
         real = resolve_workday_location(http, job)
         job["location"] = real
-        return any(k in real.lower() for k in kws)
+        return any(k in real.lower() for k in kws), False
 
-    return True  # cannot resolve, keep rather than lose it
+    # No location and no lookup available for this platform.
+    return bool(cfg["runtime"].get("keep_unresolved_locations", False)), True
 
 
 def repost_key(company, job, dedupe):
@@ -815,13 +1154,14 @@ def write_misses(cfg, misses):
 # ---------------------------------------------------------------------------
 
 def send_email(new_jobs, cfg):
+    """Returns True only if the message was actually accepted by the server."""
     host = os.environ.get("SMTP_HOST")
     to = os.environ.get("EMAIL_TO")
     user = os.environ.get("SMTP_USER")
     password = os.environ.get("SMTP_PASS")
     if not all([host, to, user, password]):
         print("Email skipped (SMTP_HOST, SMTP_USER, SMTP_PASS or EMAIL_TO not set)")
-        return
+        return False
 
     port = int(os.environ.get("SMTP_PORT", "465"))
     sender = os.environ.get("EMAIL_FROM", user)
@@ -872,22 +1212,84 @@ def send_email(new_jobs, cfg):
                 s.login(user, password)
                 s.send_message(msg)
         print("Emailed " + str(n) + " new role(s) to " + to)
+        return True
     except Exception as e:
-        print("! email failed: " + type(e).__name__ + ": " + str(e))
+        print("! email failed, will retry next run: "
+              + type(e).__name__ + ": " + str(e))
+        return False
 
 
 # ---------------------------------------------------------------------------
 # Commands
 # ---------------------------------------------------------------------------
 
+ATS_FINGERPRINTS = [
+    ("Workday", [r"([a-z0-9\-]+\.wd\d+\.myworkdayjobs\.com)"]),
+    ("Greenhouse", [r"boards\.greenhouse\.io/([a-z0-9_\-]+)",
+                    r"job-boards\.greenhouse\.io/([a-z0-9_\-]+)"]),
+    ("Lever", [r"jobs\.lever\.co/([a-z0-9\-]+)"]),
+    ("SmartRecruiters", [r"smartrecruiters\.com/([A-Za-z0-9\-]+)"]),
+    ("Ashby", [r"jobs\.ashbyhq\.com/([a-z0-9\-]+)"]),
+    ("SuccessFactors", [r"(career\d*\.(?:successfactors|sapsf)\.(?:com|eu))",
+                        r"company=([A-Za-z0-9]+)&?[^\"']*career_ns"]),
+    ("Oracle Cloud", [r"([a-z0-9]+\.fa\.[a-z0-9]+\.oraclecloud\.com)",
+                      r"siteNumber[\"'\s:=]+(CX_\d+)"]),
+    ("iCIMS", [r"([a-z0-9\-]+\.icims\.com)"]),
+    ("Taleo", [r"([a-z0-9\-]+\.taleo\.net)"]),
+    ("Avature", [r"([a-z0-9\-]+\.avature\.net)"]),
+    ("Phenom People", [r"phenompeople\.com"]),
+    ("Eightfold", [r"([a-z0-9\-]+\.eightfold\.ai)"]),
+]
+
+
+def cmd_identify(url, cfg):
+    http = Http(0, cfg["runtime"]["timeout"])
+    print("Fetching " + url + "\n")
+    page = http.text(url)
+    if not page:
+        print("Could not fetch the page. Some career sites block scripted "
+              "requests - open it in a browser, view source, and search for "
+              "'workday', 'greenhouse', 'icims' or 'successfactors' by hand.")
+        return 1
+
+    hits = []
+    for name, patterns in ATS_FINGERPRINTS:
+        for pat in patterns:
+            found = re.findall(pat, page, re.IGNORECASE)
+            if found:
+                sample = sorted({f for f in found if f})[:3]
+                hits.append((name, sample))
+                break
+
+    if not hits:
+        print("No known ATS fingerprint found in the page HTML.\n"
+              "The job list is probably loaded by JavaScript. Open the page "
+              "in a browser, use the Network tab, filter to Fetch/XHR, and "
+              "look at which host the job data comes from.")
+        return 1
+
+    print("Found:")
+    for name, sample in hits:
+        print("  " + name + ("  -> " + ", ".join(sample) if sample else ""))
+    print("\nUse the matched host as the company's url in config.json.")
+    return 0
+
+
 def cmd_check_config(cfg, args):
-    ok, failed = resolve_companies(cfg, args.only)
+    ok, failed, disabled = resolve_companies(cfg, args.only)
     label = "entry" if len(ok) == 1 else "entries"
-    print(str(len(ok)) + " company " + label + " parsed\n")
+    print(str(len(ok)) + " company " + label + " active\n")
     width = max((len(c["name"]) for c in ok), default=4)
     for c in ok:
         s = c["source"]
         print("  " + c["name"].ljust(width) + "  " + s["ats"].ljust(16) + s["label"])
+
+    if disabled:
+        print("\n" + str(len(disabled)) + " switched off:")
+        dw = max(len(n) for n, _ in disabled)
+        for name, note in disabled:
+            print("  " + name.ljust(dw) + "  " + note)
+
     if failed:
         print("\n" + str(len(failed)) + " could not be parsed:")
         for name, err in failed:
@@ -896,75 +1298,143 @@ def cmd_check_config(cfg, args):
     return 0
 
 
-def run(cfg, args):
+def poll_company(c, cfg, args):
+    """Fetch and filter one company. Runs in a worker thread, so it touches no
+    shared state and buffers its output instead of printing."""
     filters = cfg["filters"]
     rt = cfg["runtime"]
-    http = Http(rt["request_delay"], rt["timeout"])
+    src = c["source"]
+    lines = []
+
+    def log(msg):
+        lines.append(msg)
+
+    started = time.time()
+    budget = rt.get("max_company_seconds") or 0
+    deadline = time.monotonic() + budget if budget else None
+    http = Http(rt["request_delay"], rt["timeout"], log=log,
+                retries=int(rt.get("retries", 2)), deadline=deadline)
+    result = {"name": c["name"], "ats": src["ats"], "log": lines,
+              "jobs": [], "hits": [], "misses": [], "ok": False,
+              "calls": 0, "seconds": 0.0}
+
+    # Printed straight away so a slow company looks slow, not hung.
+    with PRINT_LOCK:
+        print("   ... " + c["name"] + " [" + src["ats"] + "] started",
+              flush=True)
+
+    log("-> " + c["name"] + " [" + src["ats"] + "] " + src["label"])
+
+    try:
+        jobs = FETCHERS[src["ats"]](
+            http, src, cfg, c.get("search_terms") or cfg["search_terms"], log)
+    except Exception as e:
+        log("   ! fetch failed, previous results kept: "
+            + type(e).__name__ + ": " + str(e))
+        result["calls"] = http.calls
+        result["seconds"] = time.time() - started
+        return result
+
+    if not jobs:
+        log("   0 postings returned - check the URL points at the right "
+            "career site")
+        result["calls"] = http.calls
+        result["seconds"] = time.time() - started
+        return result
+
+    if args.debug:
+        for j in jobs:
+            log("   [debug] " + j["title"] + " || " + j["location"]
+                + " || " + j["posted"])
+
+    by_title = [j for j in jobs if title_ok(j, filters)]
+    by_age = [j for j in by_title if age_ok(j, filters)]
+    hits, unresolved = [], 0
+    for j in by_age:
+        keep, missing = location_ok(j, filters, src["ats"], http, cfg)
+        unresolved += 1 if missing else 0
+        if keep:
+            hits.append(j)
+    if unresolved:
+        log("     " + str(unresolved) + " posting(s) had no usable location - "
+            + ("kept" if cfg["runtime"].get("keep_unresolved_locations")
+               else "dropped")
+            + " (runtime.keep_unresolved_locations)")
+
+    result["misses"] = [{**j, "company": c["name"]} for j in jobs
+                        if in_target_city(j, filters) and not title_ok(j, filters)]
+
+    elapsed = time.time() - started
+    log("   " + str(len(jobs)) + " fetched -> " + str(len(by_title))
+        + " title -> " + str(len(by_age)) + " age -> " + str(len(hits))
+        + " location   (" + str(http.calls) + " requests, "
+        + format(elapsed, ".0f") + "s)")
+
+    result.update(jobs=jobs, hits=hits, ok=True,
+                  calls=http.calls, seconds=elapsed)
+    return result
+
+
+def run(cfg, args):
+    rt = cfg["runtime"]
     now_dt = datetime.now(timezone.utc)
     now = now_dt.isoformat()
+    started = time.time()
 
-    companies, failed = resolve_companies(cfg, args.only)
+    companies, failed, disabled = resolve_companies(cfg, args.only)
     for name, err in failed:
         print("! " + name + ": " + err)
+    if disabled:
+        print("(" + str(len(disabled)) + " switched off: "
+              + ", ".join(n for n, _ in disabled) + ")")
     if not companies:
         print("Nothing to poll.")
         return 1
 
+    workers = max(1, min(int(rt.get("max_workers", 6)), len(companies)))
+    print("Polling " + str(len(companies)) + " companies, "
+          + str(workers) + " at a time.\n")
+
+    results = []
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = [pool.submit(poll_company, c, cfg, args) for c in companies]
+        for fut in as_completed(futures):
+            r = fut.result()
+            results.append(r)
+            with PRINT_LOCK:
+                print("\n".join(r["log"]))
+                print("   [" + str(len(results)) + "/" + str(len(companies))
+                      + " done]", flush=True)
+
+    # Everything below is single threaded, so no database locking to worry about.
     conn = open_db(args.db)
     fresh, misses, done = [], [], []
-    total_fetched = total_matched = 0
+    total_fetched = total_matched = total_calls = 0
 
-    for c in companies:
-        src = c["source"]
-        fetcher = FETCHERS[src["ats"]]
-        terms = c.get("search_terms") or cfg["search_terms"]
-        print("-> " + c["name"] + " [" + src["ats"] + "] " + src["label"])
-
-        try:
-            jobs = fetcher(http, src, cfg, terms)
-        except Exception as e:
-            print("   ! fetch failed, keeping previous results: "
-                  + type(e).__name__ + ": " + str(e))
+    for r in sorted(results, key=lambda x: x["name"]):
+        total_calls += r["calls"]
+        misses.extend(r["misses"])
+        if not r["ok"]:
             continue
-
-        if not jobs:
-            print("   0 postings returned - check the URL points at the right "
-                  "career site")
-            continue
-
-        if args.debug:
-            for j in jobs:
-                print("   [debug] " + j["title"] + " || " + j["location"]
-                      + " || " + j["posted"])
-
-        by_title = [j for j in jobs if title_ok(j, filters)]
-        by_age = [j for j in by_title if age_ok(j, filters)]
-        hits = [j for j in by_age if location_ok(j, filters, src["ats"], http, cfg)]
-
-        for j in jobs:
-            if in_target_city(j, filters) and not title_ok(j, filters):
-                misses.append({**j, "company": c["name"]})
-
-        print("   " + str(len(jobs)) + " fetched -> " + str(len(by_title))
-              + " title -> " + str(len(by_age)) + " age -> " + str(len(hits))
-              + " location")
-
-        total_fetched += len(jobs)
-        total_matched += len(hits)
-        done.append(c["name"])
+        total_fetched += len(r["jobs"])
+        total_matched += len(r["hits"])
+        done.append(r["name"])
 
         if args.dry_run:
             continue
 
-        for j in hits:
-            key = repost_key(c["name"], j, rt["dedupe_reposts"])
-            if upsert(conn, key, c["name"], src["ats"], j, now):
-                fresh.append({**j, "company": c["name"]})
+        for j in r["hits"]:
+            key = repost_key(r["name"], j, rt["dedupe_reposts"])
+            if upsert(conn, key, r["name"], r["ats"], j, now):
+                fresh.append({**j, "company": r["name"]})
+
+    wall = time.time() - started
+    slowest = max(results, key=lambda x: x["seconds"], default=None)
 
     if args.dry_run:
         print("\nDry run: " + str(total_fetched) + " fetched, "
-              + str(total_matched) + " matched, " + str(http.calls)
-              + " requests. Nothing written.")
+              + str(total_matched) + " matched, " + str(total_calls)
+              + " requests in " + format(wall, ".0f") + "s. Nothing written.")
         conn.close()
         return 0
 
@@ -978,8 +1448,11 @@ def run(cfg, args):
     mpath = write_misses(cfg, misses)
 
     print("\n" + str(len(fresh)) + " new | " + str(live) + " open | "
-          + str(closed) + " closed | " + str(pruned) + " pruned | "
-          + str(http.calls) + " requests")
+          + str(closed) + " closed | " + str(pruned) + " pruned")
+    print(str(total_calls) + " requests across " + str(len(done))
+          + " companies in " + format(wall, ".0f") + "s"
+          + ("  (slowest: " + slowest["name"] + " at "
+             + format(slowest["seconds"], ".0f") + "s)" if slowest else ""))
     print("Wrote " + str(path))
     if mpath:
         print("Wrote " + str(mpath) + " - review to tune title_keywords")
@@ -987,10 +1460,19 @@ def run(cfg, args):
     for j in fresh:
         print("  + " + j["company"] + " - " + j["title"] + " (" + j["location"] + ")")
 
-    if fresh and not args.no_email:
-        send_email(fresh, cfg)
-        conn.execute("UPDATE jobs SET notified=1 WHERE notified=0")
-        conn.commit()
+    if not args.no_email:
+        pending = conn.execute(
+            "SELECT key, company, title, location, url, age_days FROM jobs "
+            "WHERE notified=0 AND active=1 ORDER BY age_days").fetchall()
+        if pending:
+            queued = [dict(r) for r in pending]
+            if len(queued) > len(fresh):
+                print("(" + str(len(queued) - len(fresh))
+                      + " unsent from earlier runs included)")
+            if send_email(queued, cfg):
+                conn.executemany("UPDATE jobs SET notified=1 WHERE key=?",
+                                 [(r["key"],) for r in pending])
+                conn.commit()
 
     conn.close()
     return 0
@@ -1012,9 +1494,24 @@ def main():
                     help="parse careers URLs and exit, no network calls")
     ap.add_argument("--rebuild-html", action="store_true",
                     help="regenerate the page from the database without polling")
+    ap.add_argument("--mark-read", action="store_true",
+                    help="clear the email queue without sending anything")
+    ap.add_argument("--identify", metavar="URL",
+                    help="detect which ATS sits behind a custom careers domain")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
+
+    if args.mark_read:
+        conn = open_db(args.db)
+        n = conn.execute("UPDATE jobs SET notified=1 WHERE notified=0").rowcount
+        conn.commit()
+        conn.close()
+        print("Cleared " + str(n) + " queued role(s). Nothing was sent.")
+        return 0
+
+    if args.identify:
+        return cmd_identify(args.identify, cfg)
 
     if args.check_config:
         return cmd_check_config(cfg, args)

@@ -5,24 +5,29 @@
     "html_path": "docs/index.html",
     "misses_path": "docs/misses.md"
   },
+  "search_terms": [
+    "data",
+    "engineer"
+  ],
   "filters": {
     "title_keywords": [
-      "data engineer",
-      "data engineering",
-      "data platform",
-      "big data",
       "data",
       "etl",
+      "elt",
       "pyspark",
       "spark",
       "databricks",
+      "snowflake",
+      "airflow",
+      "kafka",
       "analytics engineer",
-      "backend engineer",
-      "python developer",
+      "backend",
+      "back end",
       "platform engineer",
-      "sql",
-      "aws",
-      "cloud"
+      "software engineer",
+      "python developer",
+      "ml engineer",
+      "mlops"
     ],
     "exclude_keywords": [
       "intern",
@@ -30,14 +35,24 @@
       "trainee",
       "apprentice",
       "co-op",
+      "campus",
       "director",
       "vice president",
       "manager",
       "head of",
+      "chief",
+      "data scientist",
+      "data science",
+      "data analyst",
+      "data entry",
+      "database administrator",
+      "clinical data",
       "sales",
       "recruiter",
+      "marketing",
       "finance",
-      "accounting"
+      "accounting",
+      "legal"
     ],
     "location_keywords": [
       "bangalore",
@@ -47,26 +62,17 @@
     ],
     "max_posted_days": 30
   },
-  "search_terms": [
-    "data engineer",
-    "databricks",
-    "data",
-    "sql",
-    "python",
-    "pyspark",
-    "etl",
-    "software engineer",
-    "backend",
-    "aws",
-    "cloud"
-  ],
   "runtime": {
     "request_delay": 0.4,
     "timeout": 30,
     "max_offset": 200,
     "resolve_vague_locations": true,
     "dedupe_reposts": true,
-    "drop_after_days": 45
+    "drop_after_days": 45,
+    "max_workers": 4,
+    "retries": 2,
+    "max_company_seconds": 240,
+    "keep_unresolved_locations": false
   },
   "companies": [
     {
@@ -76,6 +82,78 @@
     {
       "name": "Salesforce",
       "url": "https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site"
+    },
+    {
+      "name": "JPMC",
+      "url": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001"
+    },
+    {
+      "name": "GSK",
+      "url": "https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers"
+    },
+    {
+      "name": "Visa",
+      "url": "https://visa.wd5.myworkdayjobs.com/en-US/Visa"
+    },
+    {
+      "name": "Takeda",
+      "url": "https://takeda.wd502.myworkdayjobs.com/en-US/External"
+    },
+    {
+      "name": "Commonwealth Bank of Australia",
+      "url": "https://cba.wd3.myworkdayjobs.com/en-US/CommBank_Careers"
+    },
+    {
+      "name": "Volvo",
+      "url": "https://career55.sapsf.eu/portalcareer?company=volvoinfor&correlation_Id=14218958855&lang=en_US&clientId=jobs2web&socialApply=false&career_ns=&site=&jobPipeline=RCM+Redirect&navBarLevel=MY_PROFILE&isInternalUser=false&showAlertCreated=false&_s.crb=r3fKud5sv7m72klk49gm6ZuQjz4x3AAAB2oRYpW%252bs%252fM%253d"
+    },
+    {
+      "name": "Bayer",
+      "url": "https://career5.successfactors.eu/career?company=C0003153479P&"
+    },
+    {
+      "name": "Barclays",
+      "url": "https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays"
+    },
+    {
+      "name": "Natwest",
+      "url": "https://rbs.wd3.myworkdayjobs.com/en-US/RBS"
+    },
+    {
+      "name": "Amazon",
+      "url": "https://account.amazon.jobs/en-US/applicant"
+    },
+    {
+      "name": "Adobe",
+      "url": "https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced"
+    },
+    {
+      "name": "Novo nordisk",
+      "url": "https://career2.successfactors.eu/career?company=novonordisk&"
+    },
+    {
+      "name": "Atlassian",
+      "url": "https://careers-apac-atlassian.icims.com/jobs/search",
+      "enabled": false,
+      "note": "iCIMS, no public JSON - LinkedIn alert instead"
+    },
+    {
+      "name": "Accenture",
+      "url": "https://accenture.wd103.myworkdayjobs.com/en-US/AccentureCareers",
+      "search_terms": [
+        "data engineer",
+        "databricks"
+      ],
+      "enabled": false,
+      "note": "huge board - narrow terms so it doesn't dominate the page"
+    },
+    {
+      "name": "Terex",
+      "url": "https://terex.wd1.myworkdayjobs.com/en-US/terexcareers"
+    },
+    {
+      "name": "Fox",
+      "url": "https://fox.wd1.myworkdayjobs.com/en-US/Domestic"
     }
   ]
 }
