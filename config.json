@@ -1,0 +1,81 @@
+{
+  "site": {
+    "title": "Job Radar",
+    "subtitle": "Data engineering roles across Bengaluru, Chennai and Hyderabad",
+    "html_path": "docs/index.html",
+    "misses_path": "docs/misses.md"
+  },
+  "filters": {
+    "title_keywords": [
+      "data engineer",
+      "data engineering",
+      "data platform",
+      "big data",
+      "data",
+      "etl",
+      "pyspark",
+      "spark",
+      "databricks",
+      "analytics engineer",
+      "backend engineer",
+      "python developer",
+      "platform engineer",
+      "sql",
+      "aws",
+      "cloud"
+    ],
+    "exclude_keywords": [
+      "intern",
+      "graduate",
+      "trainee",
+      "apprentice",
+      "co-op",
+      "director",
+      "vice president",
+      "manager",
+      "head of",
+      "sales",
+      "recruiter",
+      "finance",
+      "accounting"
+    ],
+    "location_keywords": [
+      "bangalore",
+      "bengaluru",
+      "chennai",
+      "hyderabad"
+    ],
+    "max_posted_days": 30
+  },
+  "search_terms": [
+    "data engineer",
+    "databricks",
+    "data",
+    "sql",
+    "python",
+    "pyspark",
+    "etl",
+    "software engineer",
+    "backend",
+    "aws",
+    "cloud"
+  ],
+  "runtime": {
+    "request_delay": 0.4,
+    "timeout": 30,
+    "max_offset": 200,
+    "resolve_vague_locations": true,
+    "dedupe_reposts": true,
+    "drop_after_days": 45
+  },
+  "companies": [
+    {
+      "name": "Caterpillar",
+      "url": "https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers"
+    },
+    {
+      "name": "Salesforce",
+      "url": "https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site"
+    }
+  ]
+}

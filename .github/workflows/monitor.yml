@@ -1,0 +1,54 @@
+name: Job Radar
+on:
+  schedule:
+    # 03:00 UTC = 08:30 IST, weekdays. GitHub queues cron jobs, so the real
+    # run time drifts by 5-20 minutes. That is fine for a daily check.
+    - cron: "0 3 * * 1-5"
+  workflow_dispatch:          # lets you trigger a run by hand from the Actions tab
+    inputs:
+      only:
+        description: "Poll only these companies (space separated). Leave blank for all."
+        required: false
+        default: ""
+permissions:
+  contents: write             # needed to commit jobs.db and docs/index.html back
+concurrency:
+  group: job-radar
+  cancel-in-progress: false
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate config
+        run: python job_monitor.py --check-config
+      - name: Poll career sites
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO:  ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          SITE_URL:  ${{ vars.SITE_URL }}
+        run: |
+          if [ -n "${{ inputs.only }}" ]; then
+            python job_monitor.py --only ${{ inputs.only }}
+          else
+            python job_monitor.py
+          fi
+      - name: Save results
+        run: |
+          git config user.name  "job-radar"
+          git config user.email "actions@github.com"
+          git add jobs.db docs/
+          if git diff --staged --quiet; then
+            echo "Nothing changed."
+          else
+            git commit -m "Radar update $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
