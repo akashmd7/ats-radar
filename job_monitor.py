@@ -25,12 +25,14 @@ Standard library only. No dependencies.
 """
 
 import argparse
+import errno
 import http.client
 import html
 import json
 import os
 import re
 import smtplib
+import socket
 import sqlite3
 import sys
 import threading
@@ -1153,6 +1155,52 @@ def write_misses(cfg, misses):
 # Email
 # ---------------------------------------------------------------------------
 
+class ipv4_only:
+    """Force IPv4 for the duration of a block.
+
+    Some networks hand out an IPv6 address with no working IPv6 route. The
+    mail host then resolves to a AAAA record the machine cannot reach, which
+    surfaces as ENETUNREACH. Filtering resolution to A records sidesteps that
+    while keeping the hostname intact, so TLS certificate validation still
+    works normally."""
+
+    def __enter__(self):
+        self._real = socket.getaddrinfo
+
+        def ipv4(host, port, family=0, type=0, proto=0, flags=0):
+            return self._real(host, port, socket.AF_INET, type, proto, flags)
+
+        socket.getaddrinfo = ipv4
+        return self
+
+    def __exit__(self, *exc):
+        socket.getaddrinfo = self._real
+        return False
+
+
+BLOCKED_ERRNOS = {errno.ENETUNREACH, errno.EHOSTUNREACH, errno.ECONNREFUSED}
+
+
+def explain_mail_failure(e):
+    """Turn a raw socket or SMTP error into something actionable."""
+    if isinstance(e, smtplib.SMTPAuthenticationError):
+        return ("the server rejected these credentials. For Gmail you need "
+                "2FA switched on and an app password - the normal account "
+                "password will not work.")
+    if isinstance(e, smtplib.SMTPException):
+        return "the mail server refused the message: " + str(e)
+    if isinstance(e, (socket.timeout, TimeoutError)):
+        return ("the connection timed out, which usually means the SMTP port "
+                "is filtered on this network. It will work on GitHub Actions.")
+    if isinstance(e, OSError) and e.errno in BLOCKED_ERRNOS:
+        return ("no route to the mail server. This is almost always a "
+                "corporate or campus network blocking outbound SMTP - web "
+                "requests go through a proxy, but smtplib opens a raw socket "
+                "and has no proxy to use. It will work on GitHub Actions. "
+                "Nothing was lost; these roles stay queued for the next run.")
+    return type(e).__name__ + ": " + str(e)
+
+
 def send_email(new_jobs, cfg):
     """Returns True only if the message was actually accepted by the server."""
     host = os.environ.get("SMTP_HOST")
@@ -1201,21 +1249,22 @@ def send_email(new_jobs, cfg):
         + plural + '</h2><ul style="list-style:none;padding:0;margin:0">'
         + "".join(items) + '</ul>' + footer + '</div>', subtype="html")
 
+    timeout = int(os.environ.get("SMTP_TIMEOUT", "15"))
     try:
-        if port == 587:
-            with smtplib.SMTP(host, port, timeout=30) as s:
-                s.starttls()
-                s.login(user, password)
-                s.send_message(msg)
-        else:
-            with smtplib.SMTP_SSL(host, port, timeout=30) as s:
-                s.login(user, password)
-                s.send_message(msg)
+        with ipv4_only():
+            if port == 587:
+                with smtplib.SMTP(host, port, timeout=timeout) as srv:
+                    srv.starttls()
+                    srv.login(user, password)
+                    srv.send_message(msg)
+            else:
+                with smtplib.SMTP_SSL(host, port, timeout=timeout) as srv:
+                    srv.login(user, password)
+                    srv.send_message(msg)
         print("Emailed " + str(n) + " new role(s) to " + to)
         return True
     except Exception as e:
-        print("! email failed, will retry next run: "
-              + type(e).__name__ + ": " + str(e))
+        print("! email not sent - " + explain_mail_failure(e))
         return False
 
 
@@ -1460,7 +1509,19 @@ def run(cfg, args):
     for j in fresh:
         print("  + " + j["company"] + " - " + j["title"] + " (" + j["location"] + ")")
 
-    if not args.no_email:
+    # Email sends automatically in CI. Locally it stays quiet unless asked,
+    # so test runs do not spew connection errors on networks that block SMTP.
+    in_ci = bool(os.environ.get("GITHUB_ACTIONS") or os.environ.get("CI"))
+    may_email = (not args.no_email) and (in_ci or args.email)
+
+    if not may_email and not args.no_email and not in_ci:
+        queued = conn.execute(
+            "SELECT COUNT(*) FROM jobs WHERE notified=0 AND active=1").fetchone()[0]
+        if queued:
+            print(str(queued) + " role(s) queued for email. Local runs do not "
+                  "send - pass --email to send now, or --mark-read to clear.")
+
+    if may_email:
         pending = conn.execute(
             "SELECT key, company, title, location, url, age_days FROM jobs "
             "WHERE notified=0 AND active=1 ORDER BY age_days").fetchall()
@@ -1489,7 +1550,10 @@ def main():
                     help="print every raw posting before filtering")
     ap.add_argument("--dry-run", action="store_true",
                     help="fetch and filter but write nothing")
-    ap.add_argument("--no-email", action="store_true")
+    ap.add_argument("--no-email", action="store_true",
+                    help="never send, even in CI")
+    ap.add_argument("--email", action="store_true",
+                    help="send from a local run (CI sends automatically)")
     ap.add_argument("--check-config", action="store_true",
                     help="parse careers URLs and exit, no network calls")
     ap.add_argument("--rebuild-html", action="store_true",
