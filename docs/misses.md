@@ -5,10 +5,19 @@ Each company files engineering roles under its own job family. If a title below 
 - **Adobe** - [Presales Data & Campaign Solution Architect](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Presales-Data---Campaign-Solution-Architect_R167316)  
   Bangalore
 
-- **Adobe** - [Machine Learning Engineer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Machine-Learning-Engineer_R170782)  
+- **Adobe** - [Computer Scientist 2 (Full Stack)](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Software-Development-Engineer_R170239-1)  
+  Bangalore
+
+- **Adobe** - [Computer Scientist ( Full Stack - Frontend Heavy )](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Computer-Scientist---Full-Stack---Frontend-Heavy--_R170649-1)  
+  Bangalore
+
+- **Adobe** - [Computer Scientist 2 ( Full Stack Frontend Heavy )](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Computer-Scientist-2---Full-Stack-Frontend-Heavy--_R170648-1)  
   Bangalore
 
 - **Adobe** - [Production Service Engineer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Production-Service-Engineer_R164424)  
+  Bangalore
+
+- **Adobe** - [Machine Learning Engineer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Machine-Learning-Engineer_R170782)  
   Bangalore
 
 - **Adobe** - [Software Development Engineer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Software-Development-Engineer_R171037)  
@@ -23,6 +32,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **Amazon** - [Software Development Engineer II, Amazon](https://www.amazon.jobs/en/jobs/10502808/software-development-engineer-ii-amazon)  
   Hyderabad, Telangana, IND
 
+- **Amazon** - [Investigation Associate, Middle Mile Product & Technology](https://www.amazon.jobs/en/jobs/10503172/investigation-associate-middle-mile-product-technology)  
+  Bengaluru, Karnataka, IND
+
 - **Amazon** - [Program Manager I, ATS Programs](https://www.amazon.jobs/en/jobs/10503155/program-manager-i-ats-programs)  
   Hyderabad, Telangana, IND
 
@@ -35,8 +47,8 @@ Each company files engineering roles under its own job family. If a title below 
 - **Amazon** - [Software Development Engineer, Traffic Quality](https://www.amazon.jobs/en/jobs/10502382/software-development-engineer-traffic-quality)  
   Bengaluru, Karnataka, IND
 
-- **Amazon** - [Business Intelligence Engineer, IES CFX & Prime](https://www.amazon.jobs/en/jobs/10502259/business-intelligence-engineer-ies-cfx-prime)  
-  Bengaluru, Karnataka, IND
+- **Barclays** - [AVP - ST&I Recovery Resolution planning](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/AVP---ST-I-Recovery-Resolution-planning_JR-0000119542)  
+  Chennai, DLF IT Park
 
 - **Barclays** - [AVP Wholesale credit risk reporting](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/Wholesale-Credit-Risk---AVP_JR-0000120389)  
   Chennai, DLF IT Park
