@@ -1201,19 +1201,37 @@ def explain_mail_failure(e):
     return type(e).__name__ + ": " + str(e)
 
 
+def env(name, default=None):
+    """Read an environment variable, treating empty as absent.
+
+    GitHub Actions sets a variable to "" when the referenced secret does not
+    exist, so os.environ.get with a default silently returns the empty string
+    instead of the default."""
+    value = os.environ.get(name)
+    return value.strip() if value and value.strip() else default
+
+
 def send_email(new_jobs, cfg):
     """Returns True only if the message was actually accepted by the server."""
-    host = os.environ.get("SMTP_HOST")
-    to = os.environ.get("EMAIL_TO")
-    user = os.environ.get("SMTP_USER")
-    password = os.environ.get("SMTP_PASS")
-    if not all([host, to, user, password]):
-        print("Email skipped (SMTP_HOST, SMTP_USER, SMTP_PASS or EMAIL_TO not set)")
+    host = env("SMTP_HOST")
+    to = env("EMAIL_TO")
+    user = env("SMTP_USER")
+    password = env("SMTP_PASS")
+
+    missing = [n for n, v in (("SMTP_HOST", host), ("SMTP_USER", user),
+                              ("SMTP_PASS", password), ("EMAIL_TO", to))
+               if not v]
+    if missing:
+        print("Email skipped - not set: " + ", ".join(missing))
         return False
 
-    port = int(os.environ.get("SMTP_PORT", "465"))
-    sender = os.environ.get("EMAIL_FROM", user)
-    site_url = os.environ.get("SITE_URL", "")
+    try:
+        port = int(env("SMTP_PORT", "465"))
+    except ValueError:
+        print("! SMTP_PORT is not a number, falling back to 465")
+        port = 465
+    sender = env("EMAIL_FROM", user)
+    site_url = env("SITE_URL", "")
 
     n = len(new_jobs)
     plural = "s" if n != 1 else ""
@@ -1249,7 +1267,7 @@ def send_email(new_jobs, cfg):
         + plural + '</h2><ul style="list-style:none;padding:0;margin:0">'
         + "".join(items) + '</ul>' + footer + '</div>', subtype="html")
 
-    timeout = int(os.environ.get("SMTP_TIMEOUT", "15"))
+    timeout = int(env("SMTP_TIMEOUT", "15"))
 
     def attempt(p):
         with ipv4_only():
@@ -1343,6 +1361,26 @@ def cmd_identify(url, cfg):
         print("  " + name + ("  -> " + ", ".join(sample) if sample else ""))
     print("\nUse the matched host as the company's url in config.json.")
     return 0
+
+
+def cmd_test_email(cfg):
+    """Send one fake role so the mail path can be tested without polling."""
+    print("SMTP_HOST  " + (env("SMTP_HOST") or "(not set)"))
+    print("SMTP_PORT  " + (env("SMTP_PORT") or "(not set, will use 465)"))
+    print("SMTP_USER  " + (env("SMTP_USER") or "(not set)"))
+    print("SMTP_PASS  " + ("set, " + str(len(env("SMTP_PASS", "")))
+                           + " chars" if env("SMTP_PASS") else "(not set)"))
+    print("EMAIL_TO   " + (env("EMAIL_TO") or "(not set)"))
+    print("EMAIL_FROM " + (env("EMAIL_FROM") or "(not set, will use SMTP_USER)"))
+    print()
+    ok = send_email([{
+        "title": "Test message from Job Radar",
+        "company": "Job Radar",
+        "location": "If you can read this, email works",
+        "url": env("SITE_URL", "https://github.com"),
+        "age_days": 0,
+    }], cfg)
+    return 0 if ok else 1
 
 
 def cmd_check_config(cfg, args):
@@ -1583,6 +1621,8 @@ def main():
                     help="clear the email queue without sending anything")
     ap.add_argument("--identify", metavar="URL",
                     help="detect which ATS sits behind a custom careers domain")
+    ap.add_argument("--test-email", action="store_true",
+                    help="send one test message and report the mail settings")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
@@ -1594,6 +1634,9 @@ def main():
         conn.close()
         print("Cleared " + str(n) + " queued role(s). Nothing was sent.")
         return 0
+
+    if args.test_email:
+        return cmd_test_email(cfg)
 
     if args.identify:
         return cmd_identify(args.identify, cfg)

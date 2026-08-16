@@ -10,6 +10,10 @@ on:
         description: "Poll only these companies (space separated). Leave blank for all."
         required: false
         default: ""
+      test_email:
+        description: "Send a test email and stop, skipping the poll"
+        type: boolean
+        default: false
 permissions:
   contents: write             # needed to commit jobs.db and docs/index.html back
 concurrency:
@@ -26,7 +30,19 @@ jobs:
           python-version: "3.12"
       - name: Validate config
         run: python job_monitor.py --check-config
+      - name: Test email only
+        if: ${{ inputs.test_email }}
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EMAIL_TO:  ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          SITE_URL:  ${{ vars.SITE_URL }}
+        run: python job_monitor.py --test-email
       - name: Poll career sites
+        if: ${{ !inputs.test_email }}
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
