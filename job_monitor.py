@@ -1250,22 +1250,43 @@ def send_email(new_jobs, cfg):
         + "".join(items) + '</ul>' + footer + '</div>', subtype="html")
 
     timeout = int(os.environ.get("SMTP_TIMEOUT", "15"))
-    try:
+
+    def attempt(p):
         with ipv4_only():
-            if port == 587:
-                with smtplib.SMTP(host, port, timeout=timeout) as srv:
+            if p == 587 or p == 25:
+                with smtplib.SMTP(host, p, timeout=timeout) as srv:
                     srv.starttls()
                     srv.login(user, password)
                     srv.send_message(msg)
             else:
-                with smtplib.SMTP_SSL(host, port, timeout=timeout) as srv:
+                with smtplib.SMTP_SSL(host, p, timeout=timeout) as srv:
                     srv.login(user, password)
                     srv.send_message(msg)
-        print("Emailed " + str(n) + " new role(s) to " + to)
-        return True
-    except Exception as e:
-        print("! email not sent - " + explain_mail_failure(e))
-        return False
+
+    # Residential ISPs often block 465 but leave 587 open, so if the configured
+    # port looks filtered, try the other one before giving up.
+    ports = [port] + [p for p in (587, 465) if p != port]
+    last = None
+    for i, p in enumerate(ports):
+        try:
+            attempt(p)
+            print("Emailed " + str(n) + " new role(s) to " + to
+                  + (" on port " + str(p) if p != port else ""))
+            if p != port:
+                print("  (port " + str(port) + " was blocked - set SMTP_PORT="
+                      + str(p) + " to skip that wait next time)")
+            return True
+        except smtplib.SMTPAuthenticationError as e:
+            print("! email not sent - " + explain_mail_failure(e))
+            return False           # trying another port will not help
+        except Exception as e:
+            last = e
+            if i + 1 < len(ports):
+                print("  port " + str(p) + " did not work, trying "
+                      + str(ports[i + 1]))
+
+    print("! email not sent - " + explain_mail_failure(last))
+    return False
 
 
 # ---------------------------------------------------------------------------
