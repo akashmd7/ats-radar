@@ -47,9 +47,6 @@ Each company files engineering roles under its own job family. If a title below 
 - **Amazon** - [Software Development Engineer, Traffic Quality](https://www.amazon.jobs/en/jobs/10502382/software-development-engineer-traffic-quality)  
   Bengaluru, Karnataka, IND
 
-- **Barclays** - [AVP - ST&I Recovery Resolution planning](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/AVP---ST-I-Recovery-Resolution-planning_JR-0000119542)  
-  Chennai, DLF IT Park
-
 - **Barclays** - [AVP Wholesale credit risk reporting](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/Wholesale-Credit-Risk---AVP_JR-0000120389)  
   Chennai, DLF IT Park
 
@@ -84,6 +81,9 @@ Each company files engineering roles under its own job family. If a title below 
   Bangalore, Karnataka
 
 - **Caterpillar** - [Lead Business Intelligence Analyst](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Senior-Business-Intelligence-Analyst_R0000372625)  
+  Bangalore, Karnataka
+
+- **Caterpillar** - [Logistics Analyst](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Logistics-Analyst_R0000388601)  
   Bangalore, Karnataka
 
 - **Caterpillar** - [Service Information Specialist](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Service-Information-Specialist_R0000388291)  
@@ -141,9 +141,6 @@ Each company files engineering roles under its own job family. If a title below 
   Bangalore, Karnataka
 
 - **Caterpillar** - [Senior IT Analyst Applications ERP LN Consultant – Projects & Contract Management)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Senior-IT-Analyst-Applications--ERP-LN-Consultant-_R0000366241)  
-  Bangalore, Karnataka
-
-- **Caterpillar** - [Accountant (Indirect Tax)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Accountant--Indirect-Tax-_R0000385835)  
   Bangalore, Karnataka
 
 - **Caterpillar** - [Accounting Associate (Indirect Tax)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Accounting-Associate--Indirect-Tax-_R0000387377)  
@@ -257,9 +254,6 @@ Each company files engineering roles under its own job family. If a title below 
 - **GSK** - [Senior Technical Analyst](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Technical-Analyst_446285-1)  
   Bengaluru Luxor North Tower
 
-- **GSK** - [Manager Data Analytics](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Manager-Data-Analytics_441559)  
-  Bengaluru Luxor North Tower
-
 - **GSK** - [Learning Experience & Digital Content Specialist](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Learning-Experience---Digital-Content-Specialist_445889)  
   Bengaluru Luxor North Tower
 
@@ -273,9 +267,6 @@ Each company files engineering roles under its own job family. If a title below 
   Bengaluru Luxor North Tower
 
 - **GSK** - [Senior Analyst - Learning Design & Curation](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Analyst---Learning-Design---Curation_445888)  
-  Bengaluru Luxor North Tower
-
-- **GSK** - [Financial Oversight Specialist](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Financial-Oversight-Specialist_445291)  
   Bengaluru Luxor North Tower
 
 - **GSK** - [Sr. Analyst - SD Performance](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Sr-Analyst---SD-Performance_445111)  
@@ -294,9 +285,6 @@ Each company files engineering roles under its own job family. If a title below 
   Bengaluru, Karnataka, India
 
 - **JPMC** - [Futures & Derivatives Clearing - Project Manager](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210776695)  
-  Bengaluru, Karnataka, India
-
-- **JPMC** - [Platform Product Manager - Vice President](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210778576)  
   Bengaluru, Karnataka, India
 
 - **Natwest** - [Leadership Communications Manager, VP](https://rbs.wd3.myworkdayjobs.com/en-US/RBS/job/Bengaluru/Leadership-Communications-Manager--VP_R-00283569-1)  
@@ -502,6 +490,9 @@ Each company files engineering roles under its own job family. If a title below 
 
 - **Takeda** - [Data Engineering Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Data-Engineering-Manager_R0180530)  
   IND - Bengaluru
+
+- **Visa** - [People Solutions Associate](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/People-Solutions-Associate_REF087410W-1)  
+  IN - Bengaluru, India
 
 - **Visa** - [Sr. SW Engineer (3-5 years, Java/Python, GenAI, Agentic Development)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-SW-Engineer--3-5-years--Java-Python--GenAI--Agentic-Development-_REF087084W)  
   IN - Bengaluru, India
