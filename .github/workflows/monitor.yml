@@ -30,6 +30,8 @@ jobs:
           python-version: "3.12"
       - name: Validate config
         run: python job_monitor.py --check-config
+      - name: Run regression tests
+        run: python -m unittest -v
       - name: Test email only
         if: ${{ inputs.test_email }}
         env:
@@ -42,8 +44,11 @@ jobs:
           SITE_URL:  ${{ vars.SITE_URL }}
         run: python job_monitor.py --test-email
       - name: Poll career sites
+        id: poll
+        continue-on-error: true
         if: ${{ !inputs.test_email }}
         env:
+          ONLY_COMPANIES: ${{ inputs.only }}
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
@@ -52,8 +57,9 @@ jobs:
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           SITE_URL:  ${{ vars.SITE_URL }}
         run: |
-          if [ -n "${{ inputs.only }}" ]; then
-            python job_monitor.py --only ${{ inputs.only }}
+          if [ -n "$ONLY_COMPANIES" ]; then
+            read -r -a companies <<< "$ONLY_COMPANIES"
+            python job_monitor.py --only "${companies[@]}"
           else
             python job_monitor.py
           fi
@@ -68,3 +74,8 @@ jobs:
             git commit -m "Radar update $(date -u +'%Y-%m-%d %H:%M UTC')"
             git push
           fi
+      - name: Report ATS polling failure
+        if: ${{ !inputs.test_email && steps.poll.outcome == 'failure' }}
+        run: |
+          echo "One or more ATS boards returned no results. Saved results from the other boards; inspect the poll log."
+          exit 1

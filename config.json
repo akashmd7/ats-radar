@@ -89,7 +89,9 @@
     },
     {
       "name": "Uber",
-      "url": "https://iaziqy.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/UberCareers"
+      "url": "https://iaziqy.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/UberCareers",
+      "enabled": false,
+      "note": "Uber moved to jobs.uber.com; its new custom API needs a dedicated adapter"
     },
     {
       "name": "GSK",

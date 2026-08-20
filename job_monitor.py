@@ -21,6 +21,8 @@ Usage:
 Email is sent only when these environment variables are set:
     SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_TO [EMAIL_FROM] [SITE_URL]
 
+Set SMTP_IPV4_ONLY=true only for networks with broken IPv6 routing.
+
 Standard library only. No dependencies.
 """
 
@@ -858,9 +860,10 @@ def upsert(conn, key, company, ats, job, now):
     row = conn.execute("SELECT key FROM jobs WHERE key=?", (key,)).fetchone()
     if row:
         conn.execute(
-            "UPDATE jobs SET last_seen=?, active=1, location=?, age_days=?, "
-            "posted=? WHERE key=?",
-            (now, job["location"], job.get("age_days"), job["posted"], key))
+            "UPDATE jobs SET last_seen=?, active=1, title=?, location=?, url=?, "
+            "age_days=?, posted=? WHERE key=?",
+            (now, job["title"], job["location"], job["url"],
+             job.get("age_days"), job["posted"], key))
         return False
     conn.execute(
         "INSERT INTO jobs (key, company, ats, title, location, url, posted, "
@@ -1119,7 +1122,9 @@ def write_html(conn, cfg, generated_at):
     page = (PAGE
             .replace("__TITLE__", html.escape(site["title"]))
             .replace("__SUBTITLE__", html.escape(site.get("subtitle", "")))
-            .replace("__COMPANIES__", str(len(cfg["companies"])))
+            .replace("__COMPANIES__", str(sum(
+                1 for company in cfg["companies"]
+                if company.get("enabled") is not False)))
             .replace("__WINDOW__", str(window))
             .replace("__GENERATED__", generated_at.strftime("%d %b %Y, %H:%M UTC"))
             .replace("__DATA__", json.dumps(data)))
@@ -1191,12 +1196,12 @@ def explain_mail_failure(e):
         return "the mail server refused the message: " + str(e)
     if isinstance(e, (socket.timeout, TimeoutError)):
         return ("the connection timed out, which usually means the SMTP port "
-                "is filtered on this network. It will work on GitHub Actions.")
+                "is filtered or the mail host is unreachable from this runner.")
     if isinstance(e, OSError) and e.errno in BLOCKED_ERRNOS:
         return ("no route to the mail server. This is almost always a "
                 "corporate or campus network blocking outbound SMTP - web "
                 "requests go through a proxy, but smtplib opens a raw socket "
-                "and has no proxy to use. It will work on GitHub Actions. "
+                "and has no proxy to use. "
                 "Nothing was lost; these roles stay queued for the next run.")
     return type(e).__name__ + ": " + str(e)
 
@@ -1235,8 +1240,9 @@ def send_email(new_jobs, cfg):
 
     n = len(new_jobs)
     plural = "s" if n != 1 else ""
+    subject = str(n) + " new role" + plural + " - " + cfg["site"]["title"]
     msg = EmailMessage()
-    msg["Subject"] = str(n) + " new role" + plural + " - " + cfg["site"]["title"]
+    msg["Subject"] = subject
     msg["From"] = sender
     msg["To"] = to
 
@@ -1247,7 +1253,8 @@ def send_email(new_jobs, cfg):
                      + j["location"] + age + "\n  " + j["url"] + "\n")
     if site_url:
         plain.append("All open roles: " + site_url)
-    msg.set_content("\n".join(plain))
+    plain_body = "\n".join(plain)
+    msg.set_content(plain_body)
 
     items = []
     for j in new_jobs:
@@ -1261,16 +1268,17 @@ def send_email(new_jobs, cfg):
             + age + '</span></li>')
     footer = ('<p style="font-size:13px"><a href="' + html.escape(site_url)
               + '" style="color:#1F4FD8">See all open roles</a></p>') if site_url else ""
-    msg.add_alternative(
+    html_body = (
         '<div style="font-family:system-ui,sans-serif;max-width:600px">'
         '<h2 style="font-size:18px;margin:0 0 18px">' + str(n) + ' new role'
         + plural + '</h2><ul style="list-style:none;padding:0;margin:0">'
-        + "".join(items) + '</ul>' + footer + '</div>', subtype="html")
+        + "".join(items) + '</ul>' + footer + '</div>')
+    msg.add_alternative(html_body, subtype="html")
 
     timeout = int(env("SMTP_TIMEOUT", "15"))
 
     def attempt(p):
-        with ipv4_only():
+        def deliver():
             if p == 587 or p == 25:
                 with smtplib.SMTP(host, p, timeout=timeout) as srv:
                     srv.starttls()
@@ -1280,6 +1288,15 @@ def send_email(new_jobs, cfg):
                 with smtplib.SMTP_SSL(host, p, timeout=timeout) as srv:
                     srv.login(user, password)
                     srv.send_message(msg)
+
+        # GitHub-hosted runners may have a working IPv6 path even when an IPv4
+        # SMTP connection is dropped. Keep IPv4-only available for networks
+        # that need it, but do not force it globally.
+        if env("SMTP_IPV4_ONLY", "").lower() in ("1", "true", "yes"):
+            with ipv4_only():
+                deliver()
+        else:
+            deliver()
 
     # Residential ISPs often block 465 but leave 587 open, so if the configured
     # port looks filtered, try the other one before giving up.
@@ -1372,6 +1389,7 @@ def cmd_test_email(cfg):
                            + " chars" if env("SMTP_PASS") else "(not set)"))
     print("EMAIL_TO   " + (env("EMAIL_TO") or "(not set)"))
     print("EMAIL_FROM " + (env("EMAIL_FROM") or "(not set, will use SMTP_USER)"))
+    print("SMTP_IPV4_ONLY " + (env("SMTP_IPV4_ONLY") or "false (system default)"))
     print()
     ok = send_email([{
         "title": "Test message from Job Radar",
@@ -1595,6 +1613,13 @@ def run(cfg, args):
                 conn.commit()
 
     conn.close()
+    failed_names = [r["name"] for r in results if not r["ok"]]
+    if failed_names:
+        print("! No results from: " + ", ".join(sorted(failed_names))
+              + ". Existing jobs were kept; check the run log and ATS URLs.")
+        # A scheduled run needs a visible failure when an ATS changes or stops
+        # responding. Results already fetched above are still saved.
+        return 1
     return 0
 
 

@@ -90,6 +90,8 @@ without it every run treats everything as new.
   `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_TO` as secrets and `SITE_URL` as
   a variable. Gmail needs 2FA on and an app password, not the login password.
   Skip all of this if reading the page is enough.
+  The monitor uses the runner's normal IPv4/IPv6 network stack. Set the optional
+  `SMTP_IPV4_ONLY=true` secret only if your mail host cannot be reached over IPv6.
 - **Run it:** Actions tab, Job Radar, Run workflow. Then leave the cron to it.
 
 Email only goes out when something new appears. If a send fails, those roles stay
