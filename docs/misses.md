@@ -26,6 +26,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **Amazon** - [Prod Compliance Associate, RISC OPS](https://www.amazon.jobs/en/jobs/10506483/prod-compliance-associate-risc-ops)  
   Bengaluru, Karnataka, IND
 
+- **Amazon** - [Software Development Manager, Partner Growth Experience (PGX)](https://www.amazon.jobs/en/jobs/10507743/software-development-manager-partner-growth-experience-pgx)  
+  Bengaluru, Karnataka, IND
+
 - **Amazon** - [Quality Assurance Engineer I, Alexa Kids Experience](https://www.amazon.jobs/en/jobs/10505807/quality-assurance-engineer-i-alexa-kids-experience)  
   Hyderabad, Telangana, IND
 
@@ -293,6 +296,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **JPMC** - [Associate - Business Management](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210779992)  
   Bengaluru, Karnataka, India
 
+- **Natwest** - [Principal Engineer - Web Platform (UX, UI And CMS), Director](https://rbs.wd3.myworkdayjobs.com/en-US/RBS/job/Bengaluru/Principal-Engineer---Web-Platform--UX--UI-And-CMS---Director_R-00282082-2)  
+  Bengaluru
+
 - **Natwest** - [Customer Service & Operations Analyst](https://rbs.wd3.myworkdayjobs.com/en-US/RBS/job/Chennai/Customer-Service---Operations-Analyst_R-00283777)  
   Chennai
 
@@ -500,6 +506,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **Takeda** - [Data Engineering Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Data-Engineering-Manager_R0180530)  
   IND - Bengaluru
 
+- **Visa** - [Operations Manager – Card Benefits, VCA Implementation Services](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Operations-Manager---Card-Benefits--VCA-Implementation-Services_REF082921W)  
+  IN - Bengaluru, India
+
 - **Visa** - [Associate Technical Program Analyst – Project Management, Workplace Technology - 1 - 3 Years](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Technical-Project-Manager---Workplace-Technology---6---12-years-Experience_REF082988W)  
   IN - Bengaluru, India
 
@@ -557,10 +566,10 @@ Each company files engineering roles under its own job family. If a title below 
 - **Visa** - [Sr. Client Consulting Manager](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-Client-Consulting-Manager_REF087114W)  
   IN - Bengaluru, India
 
-- **Visa** - [Staff SW Engineer (7-10 years exp, RAG, AI Native Development, Java/Python Full stack)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Staff-SW-Engineer--7-10-years-exp--RAG--AI-Native-Development--Java-Python-Full-stack-_REF086890W)  
+- **Visa** - [Sr. SW Engineer - SDET - Automation, GenAI tooling, API Testing](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-SW-Engineer---SDET---Automation--GenAI-tooling--API-Testing_REF080993W)  
   IN - Bengaluru, India
 
-- **Visa** - [Sr. SW Engineer - SDET - Automation, GenAI tooling, API Testing](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-SW-Engineer---SDET---Automation--GenAI-tooling--API-Testing_REF080993W)  
+- **Visa** - [Staff SW Engineer (7-10 years exp, RAG, AI Native Development, Java/Python Full stack)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Staff-SW-Engineer--7-10-years-exp--RAG--AI-Native-Development--Java-Python-Full-stack-_REF086890W)  
   IN - Bengaluru, India
 
 - **Visa** - [Senior Director- DSOI Products, Visa GCC](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Senior-Director--DSOI-Products--Visa-GCC_REF086891W)  
