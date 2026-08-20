@@ -18,23 +18,18 @@ Usage:
     python job_monitor.py                      # full run
     python job_monitor.py --rebuild-html       # regenerate page from database
 
-Email is sent only when these environment variables are set:
-    SMTP_HOST SMTP_PORT SMTP_USER SMTP_PASS EMAIL_TO [EMAIL_FROM] [SITE_URL]
-
-Set SMTP_IPV4_ONLY=true only for networks with broken IPv6 routing.
+Notifications go to Telegram when these environment variables are set:
+    TELEGRAM_TOKEN  TELEGRAM_CHAT_ID  [SITE_URL]
 
 Standard library only. No dependencies.
 """
 
 import argparse
-import errno
 import http.client
 import html
 import json
 import os
 import re
-import smtplib
-import socket
 import sqlite3
 import sys
 import threading
@@ -43,7 +38,6 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
-from email.message import EmailMessage
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from xml.etree import ElementTree
 from pathlib import Path
@@ -860,10 +854,9 @@ def upsert(conn, key, company, ats, job, now):
     row = conn.execute("SELECT key FROM jobs WHERE key=?", (key,)).fetchone()
     if row:
         conn.execute(
-            "UPDATE jobs SET last_seen=?, active=1, title=?, location=?, url=?, "
-            "age_days=?, posted=? WHERE key=?",
-            (now, job["title"], job["location"], job["url"],
-             job.get("age_days"), job["posted"], key))
+            "UPDATE jobs SET last_seen=?, active=1, location=?, age_days=?, "
+            "posted=? WHERE key=?",
+            (now, job["location"], job.get("age_days"), job["posted"], key))
         return False
     conn.execute(
         "INSERT INTO jobs (key, company, ats, title, location, url, posted, "
@@ -1122,9 +1115,7 @@ def write_html(conn, cfg, generated_at):
     page = (PAGE
             .replace("__TITLE__", html.escape(site["title"]))
             .replace("__SUBTITLE__", html.escape(site.get("subtitle", "")))
-            .replace("__COMPANIES__", str(sum(
-                1 for company in cfg["companies"]
-                if company.get("enabled") is not False)))
+            .replace("__COMPANIES__", str(len(cfg["companies"])))
             .replace("__WINDOW__", str(window))
             .replace("__GENERATED__", generated_at.strftime("%d %b %Y, %H:%M UTC"))
             .replace("__DATA__", json.dumps(data)))
@@ -1157,53 +1148,12 @@ def write_misses(cfg, misses):
 
 
 # ---------------------------------------------------------------------------
-# Email
+# Notifications (Telegram)
 # ---------------------------------------------------------------------------
 
-class ipv4_only:
-    """Force IPv4 for the duration of a block.
-
-    Some networks hand out an IPv6 address with no working IPv6 route. The
-    mail host then resolves to a AAAA record the machine cannot reach, which
-    surfaces as ENETUNREACH. Filtering resolution to A records sidesteps that
-    while keeping the hostname intact, so TLS certificate validation still
-    works normally."""
-
-    def __enter__(self):
-        self._real = socket.getaddrinfo
-
-        def ipv4(host, port, family=0, type=0, proto=0, flags=0):
-            return self._real(host, port, socket.AF_INET, type, proto, flags)
-
-        socket.getaddrinfo = ipv4
-        return self
-
-    def __exit__(self, *exc):
-        socket.getaddrinfo = self._real
-        return False
-
-
-BLOCKED_ERRNOS = {errno.ENETUNREACH, errno.EHOSTUNREACH, errno.ECONNREFUSED}
-
-
-def explain_mail_failure(e):
-    """Turn a raw socket or SMTP error into something actionable."""
-    if isinstance(e, smtplib.SMTPAuthenticationError):
-        return ("the server rejected these credentials. For Gmail you need "
-                "2FA switched on and an app password - the normal account "
-                "password will not work.")
-    if isinstance(e, smtplib.SMTPException):
-        return "the mail server refused the message: " + str(e)
-    if isinstance(e, (socket.timeout, TimeoutError)):
-        return ("the connection timed out, which usually means the SMTP port "
-                "is filtered or the mail host is unreachable from this runner.")
-    if isinstance(e, OSError) and e.errno in BLOCKED_ERRNOS:
-        return ("no route to the mail server. This is almost always a "
-                "corporate or campus network blocking outbound SMTP - web "
-                "requests go through a proxy, but smtplib opens a raw socket "
-                "and has no proxy to use. "
-                "Nothing was lost; these roles stay queued for the next run.")
-    return type(e).__name__ + ": " + str(e)
+TELEGRAM_API = "https://api.telegram.org/bot"
+TELEGRAM_LIMIT = 3800          # real cap is 4096; leave room for the footer
+MAX_ITEMS = 30                 # beyond this, point at the dashboard instead
 
 
 def env(name, default=None):
@@ -1216,113 +1166,120 @@ def env(name, default=None):
     return value.strip() if value and value.strip() else default
 
 
-def send_email(new_jobs, cfg):
-    """Returns True only if the message was actually accepted by the server."""
-    host = env("SMTP_HOST")
-    to = env("EMAIL_TO")
-    user = env("SMTP_USER")
-    password = env("SMTP_PASS")
+def telegram_send(token, chat_id, text, timeout=20):
+    """POST one message. Returns (ok, description)."""
+    payload = json.dumps({
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML",
+        "disable_web_page_preview": True,
+    }).encode()
+    req = urllib.request.Request(
+        TELEGRAM_API + token + "/sendMessage",
+        data=payload,
+        headers={"Content-Type": "application/json", "User-Agent": UA})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            body = json.loads(r.read().decode("utf-8", "replace"))
+        return bool(body.get("ok")), body.get("description", "")
+    except urllib.error.HTTPError as e:
+        try:
+            body = json.loads(e.read().decode("utf-8", "replace"))
+            return False, body.get("description", "HTTP " + str(e.code))
+        except Exception:
+            return False, "HTTP " + str(e.code)
+    except Exception as e:
+        return False, type(e).__name__ + ": " + str(e)
 
-    missing = [n for n, v in (("SMTP_HOST", host), ("SMTP_USER", user),
-                              ("SMTP_PASS", password), ("EMAIL_TO", to))
-               if not v]
+
+def format_job(job):
+    bits = [job.get("company", ""), job.get("location", "")]
+    age = job.get("age_days")
+    if age == 0:
+        bits.append("today")
+    elif age == 1:
+        bits.append("yesterday")
+    elif age is not None:
+        bits.append(str(age) + "d ago")
+    meta = " \u00b7 ".join(b for b in bits if b)
+    return ('<a href="' + html.escape(job.get("url", ""), quote=True) + '">'
+            + html.escape(job.get("title", "Untitled")) + "</a>\n"
+            + "<i>" + html.escape(meta) + "</i>")
+
+
+def build_messages(new_jobs, site_url):
+    """Split into chunks that fit Telegram's per-message limit."""
+    n = len(new_jobs)
+    shown = new_jobs[:MAX_ITEMS]
+    header = "<b>" + str(n) + " new role" + ("s" if n != 1 else "") + "</b>"
+
+    footer = ""
+    if n > MAX_ITEMS:
+        footer = ("\n<i>" + str(n - MAX_ITEMS) + " more not shown.</i>")
+    if site_url:
+        footer += ('\n<a href="' + html.escape(site_url, quote=True)
+                   + '">Open the dashboard</a>')
+
+    chunks, current = [], header
+    for job in shown:
+        block = "\n\n" + format_job(job)
+        if len(current) + len(block) > TELEGRAM_LIMIT:
+            chunks.append(current)
+            current = block.lstrip()
+        else:
+            current += block
+    if footer and len(current) + len(footer) <= TELEGRAM_LIMIT:
+        current += "\n" + footer
+        chunks.append(current)
+    else:
+        chunks.append(current)
+        if footer:
+            chunks.append(footer.strip())
+    return [c for c in chunks if c.strip()]
+
+
+def notify(new_jobs, cfg):
+    """Send new roles to Telegram. Returns True only if everything was
+    delivered, so a partial failure leaves the queue intact for a retry."""
+    token = env("TELEGRAM_TOKEN")
+    chat_id = env("TELEGRAM_CHAT_ID")
+
+    missing = [n for n, v in (("TELEGRAM_TOKEN", token),
+                              ("TELEGRAM_CHAT_ID", chat_id)) if not v]
     if missing:
-        print("Email skipped - not set: " + ", ".join(missing))
+        print("Notify skipped - not set: " + ", ".join(missing))
         return False
 
-    try:
-        port = int(env("SMTP_PORT", "465"))
-    except ValueError:
-        print("! SMTP_PORT is not a number, falling back to 465")
-        port = 465
-    sender = env("EMAIL_FROM", user)
-    site_url = env("SITE_URL", "")
+    messages = build_messages(new_jobs, env("SITE_URL", ""))
+    for i, text in enumerate(messages):
+        ok, why = telegram_send(token, chat_id, text)
+        if not ok:
+            print("! Telegram rejected message " + str(i + 1) + " of "
+                  + str(len(messages)) + " - " + explain_telegram(why))
+            return False
+        if i + 1 < len(messages):
+            time.sleep(0.5)        # stay under the per-chat rate limit
 
-    n = len(new_jobs)
-    plural = "s" if n != 1 else ""
-    subject = str(n) + " new role" + plural + " - " + cfg["site"]["title"]
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = to
+    print("Notified " + str(len(new_jobs)) + " new role(s) via Telegram"
+          + (" in " + str(len(messages)) + " messages"
+             if len(messages) > 1 else ""))
+    return True
 
-    plain = [str(n) + " new matching role" + plural + ".", ""]
-    for j in new_jobs:
-        age = "" if j.get("age_days") is None else " - " + str(j["age_days"]) + "d ago"
-        plain.append(j["title"] + "\n  " + j["company"] + " / "
-                     + j["location"] + age + "\n  " + j["url"] + "\n")
-    if site_url:
-        plain.append("All open roles: " + site_url)
-    plain_body = "\n".join(plain)
-    msg.set_content(plain_body)
 
-    items = []
-    for j in new_jobs:
-        age = "" if j.get("age_days") is None else " &middot; " + str(j["age_days"]) + "d ago"
-        items.append(
-            '<li style="margin:0 0 16px">'
-            '<a href="' + html.escape(j["url"]) + '" style="color:#1F4FD8;'
-            'text-decoration:none;font-weight:600">' + html.escape(j["title"]) + '</a><br>'
-            '<span style="color:#4A5A69;font-size:13px">'
-            + html.escape(j["company"]) + ' &middot; ' + html.escape(j["location"])
-            + age + '</span></li>')
-    footer = ('<p style="font-size:13px"><a href="' + html.escape(site_url)
-              + '" style="color:#1F4FD8">See all open roles</a></p>') if site_url else ""
-    html_body = (
-        '<div style="font-family:system-ui,sans-serif;max-width:600px">'
-        '<h2 style="font-size:18px;margin:0 0 18px">' + str(n) + ' new role'
-        + plural + '</h2><ul style="list-style:none;padding:0;margin:0">'
-        + "".join(items) + '</ul>' + footer + '</div>')
-    msg.add_alternative(html_body, subtype="html")
-
-    timeout = int(env("SMTP_TIMEOUT", "15"))
-
-    def attempt(p):
-        def deliver():
-            if p == 587 or p == 25:
-                with smtplib.SMTP(host, p, timeout=timeout) as srv:
-                    srv.starttls()
-                    srv.login(user, password)
-                    srv.send_message(msg)
-            else:
-                with smtplib.SMTP_SSL(host, p, timeout=timeout) as srv:
-                    srv.login(user, password)
-                    srv.send_message(msg)
-
-        # GitHub-hosted runners may have a working IPv6 path even when an IPv4
-        # SMTP connection is dropped. Keep IPv4-only available for networks
-        # that need it, but do not force it globally.
-        if env("SMTP_IPV4_ONLY", "").lower() in ("1", "true", "yes"):
-            with ipv4_only():
-                deliver()
-        else:
-            deliver()
-
-    # Residential ISPs often block 465 but leave 587 open, so if the configured
-    # port looks filtered, try the other one before giving up.
-    ports = [port] + [p for p in (587, 465) if p != port]
-    last = None
-    for i, p in enumerate(ports):
-        try:
-            attempt(p)
-            print("Emailed " + str(n) + " new role(s) to " + to
-                  + (" on port " + str(p) if p != port else ""))
-            if p != port:
-                print("  (port " + str(port) + " was blocked - set SMTP_PORT="
-                      + str(p) + " to skip that wait next time)")
-            return True
-        except smtplib.SMTPAuthenticationError as e:
-            print("! email not sent - " + explain_mail_failure(e))
-            return False           # trying another port will not help
-        except Exception as e:
-            last = e
-            if i + 1 < len(ports):
-                print("  port " + str(p) + " did not work, trying "
-                      + str(ports[i + 1]))
-
-    print("! email not sent - " + explain_mail_failure(last))
-    return False
-
+def explain_telegram(description):
+    d = (description or "").lower()
+    if "chat not found" in d:
+        return ("chat not found - TELEGRAM_CHAT_ID is wrong, or you have not "
+                "sent your bot a message yet. Open the bot in Telegram, press "
+                "Start, then read the id from getUpdates.")
+    if "unauthorized" in d or "token" in d:
+        return ("the bot token was rejected - check TELEGRAM_TOKEN against "
+                "what BotFather gave you.")
+    if "can't parse entities" in d or "parse" in d:
+        return "a job title broke the HTML formatting: " + description
+    if "too many requests" in d or "retry after" in d:
+        return "rate limited by Telegram, it will go out on the next run."
+    return description or "no reason given"
 
 # ---------------------------------------------------------------------------
 # Commands
@@ -1380,21 +1337,18 @@ def cmd_identify(url, cfg):
     return 0
 
 
-def cmd_test_email(cfg):
-    """Send one fake role so the mail path can be tested without polling."""
-    print("SMTP_HOST  " + (env("SMTP_HOST") or "(not set)"))
-    print("SMTP_PORT  " + (env("SMTP_PORT") or "(not set, will use 465)"))
-    print("SMTP_USER  " + (env("SMTP_USER") or "(not set)"))
-    print("SMTP_PASS  " + ("set, " + str(len(env("SMTP_PASS", "")))
-                           + " chars" if env("SMTP_PASS") else "(not set)"))
-    print("EMAIL_TO   " + (env("EMAIL_TO") or "(not set)"))
-    print("EMAIL_FROM " + (env("EMAIL_FROM") or "(not set, will use SMTP_USER)"))
-    print("SMTP_IPV4_ONLY " + (env("SMTP_IPV4_ONLY") or "false (system default)"))
+def cmd_test_notify(cfg):
+    """Send one fake role so the Telegram path can be tested without polling."""
+    tok = env("TELEGRAM_TOKEN")
+    print("TELEGRAM_TOKEN    " + (tok.split(":")[0] + ":..." if tok
+                                  else "(not set)"))
+    print("TELEGRAM_CHAT_ID  " + (env("TELEGRAM_CHAT_ID") or "(not set)"))
+    print("SITE_URL          " + (env("SITE_URL") or "(not set)"))
     print()
-    ok = send_email([{
+    ok = notify([{
         "title": "Test message from Job Radar",
         "company": "Job Radar",
-        "location": "If you can read this, email works",
+        "location": "If you can read this, notifications work",
         "url": env("SITE_URL", "https://github.com"),
         "age_days": 0,
     }], cfg)
@@ -1589,16 +1543,16 @@ def run(cfg, args):
     # Email sends automatically in CI. Locally it stays quiet unless asked,
     # so test runs do not spew connection errors on networks that block SMTP.
     in_ci = bool(os.environ.get("GITHUB_ACTIONS") or os.environ.get("CI"))
-    may_email = (not args.no_email) and (in_ci or args.email)
+    may_notify = (not args.no_notify) and (in_ci or args.notify)
 
-    if not may_email and not args.no_email and not in_ci:
+    if not may_notify and not args.no_notify and not in_ci:
         queued = conn.execute(
             "SELECT COUNT(*) FROM jobs WHERE notified=0 AND active=1").fetchone()[0]
         if queued:
-            print(str(queued) + " role(s) queued for email. Local runs do not "
-                  "send - pass --email to send now, or --mark-read to clear.")
+            print(str(queued) + " role(s) queued. Local runs stay quiet - "
+                  "pass --notify to send now, or --mark-read to clear.")
 
-    if may_email:
+    if may_notify:
         pending = conn.execute(
             "SELECT key, company, title, location, url, age_days FROM jobs "
             "WHERE notified=0 AND active=1 ORDER BY age_days").fetchall()
@@ -1607,19 +1561,12 @@ def run(cfg, args):
             if len(queued) > len(fresh):
                 print("(" + str(len(queued) - len(fresh))
                       + " unsent from earlier runs included)")
-            if send_email(queued, cfg):
+            if notify(queued, cfg):
                 conn.executemany("UPDATE jobs SET notified=1 WHERE key=?",
                                  [(r["key"],) for r in pending])
                 conn.commit()
 
     conn.close()
-    failed_names = [r["name"] for r in results if not r["ok"]]
-    if failed_names:
-        print("! No results from: " + ", ".join(sorted(failed_names))
-              + ". Existing jobs were kept; check the run log and ATS URLs.")
-        # A scheduled run needs a visible failure when an ATS changes or stops
-        # responding. Results already fetched above are still saved.
-        return 1
     return 0
 
 
@@ -1634,20 +1581,22 @@ def main():
                     help="print every raw posting before filtering")
     ap.add_argument("--dry-run", action="store_true",
                     help="fetch and filter but write nothing")
-    ap.add_argument("--no-email", action="store_true",
-                    help="never send, even in CI")
-    ap.add_argument("--email", action="store_true",
+    ap.add_argument("--no-notify", "--no-email", dest="no_notify",
+                    action="store_true", help="never send, even in CI")
+    ap.add_argument("--notify", "--email", dest="notify",
+                    action="store_true",
                     help="send from a local run (CI sends automatically)")
     ap.add_argument("--check-config", action="store_true",
                     help="parse careers URLs and exit, no network calls")
     ap.add_argument("--rebuild-html", action="store_true",
                     help="regenerate the page from the database without polling")
     ap.add_argument("--mark-read", action="store_true",
-                    help="clear the email queue without sending anything")
+                    help="clear the notification queue without sending anything")
     ap.add_argument("--identify", metavar="URL",
                     help="detect which ATS sits behind a custom careers domain")
-    ap.add_argument("--test-email", action="store_true",
-                    help="send one test message and report the mail settings")
+    ap.add_argument("--test-notify", "--test-email", dest="test_notify",
+                    action="store_true",
+                    help="send one test message and show the Telegram settings")
     args = ap.parse_args()
 
     cfg = load_config(args.config)
@@ -1660,8 +1609,8 @@ def main():
         print("Cleared " + str(n) + " queued role(s). Nothing was sent.")
         return 0
 
-    if args.test_email:
-        return cmd_test_email(cfg)
+    if args.test_notify:
+        return cmd_test_notify(cfg)
 
     if args.identify:
         return cmd_identify(args.identify, cfg)

@@ -1,7 +1,7 @@
 # Job Radar
 
 Checks company career sites for matching roles, publishes them to a web page,
-and emails me when something new turns up. Runs itself daily on GitHub Actions.
+and pings me on Telegram when something new turns up. Runs itself daily on GitHub Actions.
 
 Companies don't build their own career pages - they rent an ATS, and those have
 public JSON APIs. So this calls APIs instead of scraping HTML. Python standard
@@ -44,7 +44,9 @@ python job_monitor.py --check-config     # validate URLs, no network
 python job_monitor.py --dry-run          # fetch and filter, write nothing
 python job_monitor.py --only Caterpillar --debug
 python job_monitor.py                    # full run
-python job_monitor.py --mark-read        # clear email queue without sending
+python job_monitor.py --notify           # send from a local run
+python job_monitor.py --test-notify      # send one test message, no polling
+python job_monitor.py --mark-read        # clear the queue without sending
 python job_monitor.py --rebuild-html     # regenerate page from database
 ```
 
@@ -90,13 +92,23 @@ without it every run treats everything as new.
   `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `EMAIL_TO` as secrets and `SITE_URL` as
   a variable. Gmail needs 2FA on and an app password, not the login password.
   Skip all of this if reading the page is enough.
-  The monitor uses the runner's normal IPv4/IPv6 network stack. Set the optional
-  `SMTP_IPV4_ONLY=true` secret only if your mail host cannot be reached over IPv6.
 - **Run it:** Actions tab, Job Radar, Run workflow. Then leave the cron to it.
 
-Email only goes out when something new appears. If a send fails, those roles stay
-queued for the next run rather than being lost. The page is cumulative, so
-missing an email doesn't lose anything.
+Messages only go out when something new appears. If a send fails, those roles
+stay queued for the next run rather than being lost. The page is cumulative, so
+missing a notification doesn't lose anything.
+
+Local runs stay quiet and just report how many roles are queued. Pass `--notify`
+to send anyway. GitHub Actions sends automatically.
+
+Telegram caps a message at 4096 characters, so long batches are split across
+several messages, and anything over 30 roles links to the dashboard instead of
+listing them all. That matters mainly on the first run, which finds every
+currently open role at once.
+
+Telegram is used rather than email because it is plain HTTPS on port 443, so it
+works on networks that block outbound SMTP - which many home ISPs and most
+corporate networks do.
 
 ## Notes
 
