@@ -160,6 +160,56 @@
     {
       "name": "Fox",
       "url": "https://fox.wd1.myworkdayjobs.com/en-US/Domestic"
+    },
+    {
+      "name": "Amgen",
+      "url": "https://amgen.wd1.myworkdayjobs.com/en-US/Careers"
+    },
+    {
+      "name": "Bristol Myers Squibb",
+      "url": "https://bristolmyerssquibb.wd5.myworkdayjobs.com/BMS"
+    },
+    {
+      "name": "Walmart Global Tech",
+      "url": "https://walmart.wd5.myworkdayjobs.com/WalmartExternal",
+      "search_terms": [
+        "data engineer",
+        "databricks"
+      ],
+      "note": "very large board - narrow terms to stay inside the time budget"
+    },
+    {
+      "name": "Target",
+      "url": "https://target.wd5.myworkdayjobs.com/targetcareers"
+    },
+    {
+      "name": "Wells Fargo",
+      "url": "https://wf.wd1.myworkdayjobs.com/WellsFargoJobs",
+      "search_terms": [
+        "data engineer",
+        "databricks"
+      ],
+      "note": "very large board - narrow terms"
+    },
+    {
+      "name": "PayPal",
+      "url": "https://paypal.wd1.myworkdayjobs.com/en-US/jobs"
+    },
+    {
+      "name": "NVIDIA",
+      "url": "https://nvidia.wd5.myworkdayjobs.com/NVIDIAExternalCareerSite"
+    },
+    {
+      "name": "Mastercard",
+      "url": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers"
+    },
+    {
+      "name": "ServiceNow",
+      "url": "https://jobs.smartrecruiters.com/ServiceNow"
+    },
+    {
+      "name": "Razorpay",
+      "url": "https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited"
     }
   ]
 }
