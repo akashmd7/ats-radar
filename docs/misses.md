@@ -2,6 +2,9 @@
 
 Each company files engineering roles under its own job family. If a title below looks relevant, add its distinctive phrase to `filters.title_keywords` in config.json.
 
+- **Adobe** - [Digital Analyst](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Data-Science-Engineer_R171428)  
+  Bangalore
+
 - **Adobe** - [Solution Architect - Presales](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Presales-Data---Campaign-Solution-Architect_R167316)  
   Bangalore
 
@@ -18,6 +21,9 @@ Each company files engineering roles under its own job family. If a title below 
   Bangalore
 
 - **Adobe** - [Enterprise Architect](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Enterprise-Architect_R169932)  
+  Bangalore
+
+- **Adobe** - [Enterprise Architect (Martech- CDP)](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Enterprise-Architect--Martech--CDP-_R172048)  
   Bangalore
 
 - **Adobe** - [Computer Scientist - Java, Microservices, Agentic AI](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Software-Development-Engineer-2_R169518)  
@@ -44,16 +50,10 @@ Each company files engineering roles under its own job family. If a title below 
 - **Adobe** - [Staff Product Designer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Staff-UX-Designer_R162152)  
   Bangalore
 
-- **Adobe** - [Computer Scientist I (Full Stack Growth Engineer)](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Computer-Scientist-I--Full-Stack-Growth-Engineer-_R171690)  
-  Bangalore
-
 - **Adobe** - [Software Development Engineer 3 - Microsoft Dynamics Developer](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Software-Development-Engineer-3---Microsoft-Dynamics-Developer_R171858)  
   Bangalore
 
 - **Adobe** - [Principal Scientist - Adobe Brand Intelligence](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Principal-Scientist---Adobe-Brand-Intelligence_R170230-1)  
-  Bangalore
-
-- **Adobe** - [Computer Scientist 2](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Computer-Scientist-2_R171327)  
   Bangalore
 
 - **Adobe** - [Computer Scientist 2 ( Full Stack )](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Computer-Scientist-2---Full-Stack--_R171461-1)  
@@ -62,19 +62,19 @@ Each company files engineering roles under its own job family. If a title below 
 - **Adobe** - [Solution Architect](https://adobe.wd5.myworkdayjobs.com/en-US/external_experienced/job/Bangalore/Solutions-Consultant-3_R168355-1)  
   Bangalore
 
-- **Amazon** - [Sr. Associate (Arabic), Prime Video Trust & Safety](https://www.amazon.jobs/en/jobs/10567127/sr-associate-arabic-prime-video-trust-safety)  
+- **Amazon** - [Manager, Account Management, NA AVS, RBS](https://www.amazon.jobs/en/jobs/10568615/manager-account-management-na-avs-rbs)  
+  Bengaluru, Karnataka, IND
+
+- **Amazon** - [Account Manager, CA AVS, Paid Selling Partner Services](https://www.amazon.jobs/en/jobs/10568614/account-manager-ca-avs-paid-selling-partner-services)  
   Bengaluru, Karnataka, IND
 
 - **Amazon** - [Principal Tech Ops Engineer, AWS Rack Manufacturing](https://www.amazon.jobs/en/jobs/10566312/principal-tech-ops-engineer-aws-rack-manufacturing)  
   Hyderabad, Telangana, IND
 
-- **Amazon** - [Principal Strategist, Energy & Water Infrastructure, Energy & Water - Asia Pacific Region](https://www.amazon.jobs/en/jobs/10566200/principal-strategist-energy-water-infrastructure-energy-water-asia-pacific-region)  
-  Hyderabad, Telangana, IND
-
-- **Amazon** - [Software Development Engineer II, Prime Video Sports, PV Sports and Linear Tech](https://www.amazon.jobs/en/jobs/10565804/software-development-engineer-ii-prime-video-sports-pv-sports-and-linear-tech)  
+- **Amazon** - [Software Dev Engineer, Alexa AI](https://www.amazon.jobs/en/jobs/10568545/software-dev-engineer-alexa-ai)  
   Bengaluru, Karnataka, IND
 
-- **Amazon** - [Quality Assurance Engineer, FBA](https://www.amazon.jobs/en/jobs/10566315/quality-assurance-engineer-fba)  
+- **Amazon** - [Manager, Enterprise Support, ES - INDIA, ES-India Cross Region](https://www.amazon.jobs/en/jobs/10568408/manager-enterprise-support-es-india-es-india-cross-region)  
   Bengaluru, Karnataka, IND
 
 - **Amgen** - [Data Scientist - Data Modeling/analytics](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Sr-Associate-Data-Analytics_R-240017)  
@@ -150,9 +150,6 @@ Each company files engineering roles under its own job family. If a title below 
   India - Hyderabad
 
 - **Amgen** - [Biostatistics Manager – Data Visualization](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Biostatistics-Manager---Data-Visualization_R-245748)  
-  India - Hyderabad
-
-- **Amgen** - [Manager-Analytical & Data Verification](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Manager---Stability_R-245903)  
   India - Hyderabad
 
 - **Amgen** - [Manager- HR Data Analytics](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Manager--HR-Data-Analytics_R-245794-1)  
@@ -297,6 +294,12 @@ Each company files engineering roles under its own job family. If a title below 
   India - Hyderabad
 
 - **Amgen** - [Senior Manager - Systems and Master Data Management Lead](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Senior-Manager---Systems-and-Master-Data-Management-Lead_R-240394)  
+  India - Hyderabad
+
+- **Amgen** - [Senior Associate – Value & Access Insights](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Senior-Associate---Value---Access-Insights_R-248357)  
+  India - Hyderabad
+
+- **Amgen** - [Associate Product Owner - Digital Authoring Platform](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Associate-Product-Owner---Digital-Authoring-Platform_R-248036)  
   India - Hyderabad
 
 - **Amgen** - [Principal Engineer (Chemical Engineering)](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Principal-Engineer_R-249067)  
@@ -446,8 +449,8 @@ Each company files engineering roles under its own job family. If a title below 
 - **Amgen** - [C&Q Document Preparation Support (Drug Product)](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/C-Q-Document-Preparation-Support--Drug-Product-_R-248238-1)  
   India - Hyderabad
 
-- **Barclays** - [Engineer - AI Platform](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Bengaluru-Maruthi-Onyx---TESCO-TSA/Engineer---AI-Platform_JR-0000131618-1)  
-  Bengaluru, Maruthi Onyx - TESCO TSA
+- **Amgen** - [Sr Associate IS Engineer, Commercialization Technology](https://amgen.wd1.myworkdayjobs.com/en-US/Careers/job/India---Hyderabad/Sr-Associate-IS-Engineer--Commercialization-Technology_R-232091)  
+  India - Hyderabad
 
 - **Barclays** - [AVP - Treasury PC](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/AVP---Treasury-PC_JR-0000126643-1)  
   Chennai, DLF IT Park
@@ -457,9 +460,6 @@ Each company files engineering roles under its own job family. If a title below 
 
 - **Barclays** - [Analyst](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/Analyst_JR-0000105343)  
   Chennai, DLF IT Park
-
-- **Barclays** - [Senior Engineer - AI Platform](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Bengaluru-Maruthi-Onyx---TESCO-TSA/Senior-Engineer---AI-Platform_JR-0000101366)  
-  Bengaluru, Maruthi Onyx - TESCO TSA
 
 - **Barclays** - [VP- Liquidity Risk Reporting](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/VP--Liquidity-Risk-Reporting_JR-0000132308-1)  
   Chennai, DLF IT Park
@@ -475,9 +475,6 @@ Each company files engineering roles under its own job family. If a title below 
 
 - **Barclays** - [Analyst - Group FP&A](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/Analyst---Group-FP-A_JR-0000113474)  
   Chennai, DLF IT Park
-
-- **Barclays** - [Lead Engineer - Applied AI](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Bengaluru-Maruthi-Onyx---TESCO-TSA/Lead-Engineer---Applied-AI_JR-0000087561-2)  
-  Bengaluru, Maruthi Onyx - TESCO TSA
 
 - **Barclays** - [Campaign Execution Analyst](https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/Chennai-DLF-IT-Park/Campaign-Execution-Analyst_JR-0000119776)  
   Chennai, DLF IT Park
@@ -495,6 +492,9 @@ Each company files engineering roles under its own job family. If a title below 
   Hyderabad - TS - IN
 
 - **Bristol Myers Squibb** - [Senior Manager, Data Science](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Senior-Manager--Data-Science_R1601747-1)  
+  Hyderabad - TS - IN
+
+- **Bristol Myers Squibb** - [Real World Data Analyst II](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Real-World-Data-Analyst-II_R1606950)  
   Hyderabad - TS - IN
 
 - **Bristol Myers Squibb** - [Manager, Pharmaceutical Product Development GenAI & Data Science](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Manager--Pharmaceutical-Product-Development-GenAI---Data-Science_R1605511-1)  
@@ -515,16 +515,22 @@ Each company files engineering roles under its own job family. If a title below 
 - **Bristol Myers Squibb** - [Senior Trial Supplies Manager](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Senior-Trial-Supplies-Manager_R1606884)  
   Hyderabad - TS - IN
 
+- **Bristol Myers Squibb** - [Sr. Global Trial Acceleration Associate](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Sr-Global-Trial-Acceleration-Associate_R1606963)  
+  Hyderabad - TS - IN
+
 - **Bristol Myers Squibb** - [DLP Engineer](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/DLP-Engineer_R1605268)  
   Hyderabad - TS - IN
 
 - **Bristol Myers Squibb** - [Principal AI Engineer](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Principal-AI-M365-Lead_R1604473)  
   Hyderabad - TS - IN
 
+- **Bristol Myers Squibb** - [Senior Software Fullstack Engineer](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Senior-Software-Fullstack-Engineer_R1605218-1)  
+  Hyderabad - TS - IN
+
 - **Bristol Myers Squibb** - [Senior Software Engineer - Manager I - SAP Costing](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Senior-Software-Engineer---Manager-I---SAP-Costing_R1606584)  
   Hyderabad - TS - IN
 
-- **Bristol Myers Squibb** - [Manager, PV Analytics Center of Excellence](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Manager--PV-Analytics-Center-of-Excellence_R1605415)  
+- **Bristol Myers Squibb** - [Sr. Analyst, US Customer Engagement Measurement & Insights](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Sr-Analyst--US-Customer-Engagement-Measurement---Insights_R1606586)  
   Hyderabad - TS - IN
 
 - **Bristol Myers Squibb** - [Senior Manager, Enabling Services Agile Sourcing](https://bristolmyerssquibb.wd5.myworkdayjobs.com/en-US/BMS/job/Hyderabad---TS---IN/Senior-Manager--Enabling-Services-Agile-Sourcing_R1604121)  
@@ -551,14 +557,17 @@ Each company files engineering roles under its own job family. If a title below 
 - **Caterpillar** - [IT Architect (Azure Cloud Architect)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/IT-Architect--Azure-Cloud-Architect-_R0000382647)  
   Bangalore, Karnataka
 
-- **Caterpillar** - [Condition Monitoring Advisor-1](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Condition-Monitoring-Advisor-1_R0000389692)  
-  Chennai, Tamil Nadu
+- **Caterpillar** - [Supply Chain Planning Analyst](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Supply-Chain-Planning-Analyst_R0000397204)  
+  Bangalore, Karnataka
 
 - **Caterpillar** - [Marketing & Sales Operations Rep](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Marketing---Sales-Operations-Rep_R0000396060)  
   Bangalore, Karnataka
 
-- **Caterpillar** - [Cost Management Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Cost-Management-Engineer_R0000394953)  
+- **Caterpillar** - [Condition Monitoring Advisor-1](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Condition-Monitoring-Advisor-1_R0000389692)  
   Chennai, Tamil Nadu
+
+- **Caterpillar** - [Category Buyer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Category-Buyer_R0000396438)  
+  Bangalore, Karnataka
 
 - **Caterpillar** - [Demand & Orders Analyst](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Demand---Orders-Analyst_R0000396155)  
   Chennai, Tamil Nadu
@@ -569,23 +578,29 @@ Each company files engineering roles under its own job family. If a title below 
 - **Caterpillar** - [Accountant (Indirect Tax)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Accountant--Indirect-Tax-_R0000385835)  
   Bangalore, Karnataka
 
-- **Caterpillar** - [Autonomy Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Autonomy-Engineer_R0000395301)  
-  Chennai, Tamil Nadu
-
-- **Caterpillar** - [Manager Engineering](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Manager-Engineering_R0000396454)  
-  Chennai, Tamil Nadu
-
 - **Caterpillar** - [Controls Design Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Controls-Design-Engineer_R0000393839)  
   Chennai, Tamil Nadu
 
 - **Caterpillar** - [Manager Engineering (ITS - Onboard Productivity Applications)](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Manager-Engineering--ITS---Onboard-Productivity-Applications-_R0000396455)  
   Chennai, Tamil Nadu
 
+- **Caterpillar** - [Manager Engineering](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Manager-Engineering_R0000396454)  
+  Chennai, Tamil Nadu
+
 - **Caterpillar** - [TTT GET Design Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/TTT-GET-Design-Engineer_R0000397404)  
   Chennai, Tamil Nadu
 
+- **Caterpillar** - [Design Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Bangalore-Karnataka/Design-Engineer_R0000397476)  
+  Bangalore, Karnataka
+
 - **Caterpillar** - [Senior Autonomy Engineer](https://cat.wd5.myworkdayjobs.com/en-US/CaterpillarCareers/job/Chennai-Tamil-Nadu/Senior-Autonomy-Engineer_R0000396676)  
   Chennai, Tamil Nadu
+
+- **Commonwealth Bank of Australia** - [Cyber Generalist Manager](https://cba.wd3.myworkdayjobs.com/en-US/CommBank_Careers/job/Bangalore---Manyata-Tech-Park-Road/Cyber-Generalist-Manager_REQ263699)  
+  Bangalore - Manyata Tech Park Road
+
+- **Commonwealth Bank of Australia** - [Engineering Senior Manager](https://cba.wd3.myworkdayjobs.com/en-US/CommBank_Careers/job/Bangalore---Manyata-Tech-Park-Road/Engineering-Senior-Manager_REQ264830)  
+  Bangalore - Manyata Tech Park Road
 
 - **Commonwealth Bank of Australia** - [Cyber Incident Responder](https://cba.wd3.myworkdayjobs.com/en-US/CommBank_Careers/job/Bangalore---Manyata-Tech-Park-Road/Cyber-Incident-Responder_REQ258610-1)  
   Bangalore - Manyata Tech Park Road
@@ -644,8 +659,8 @@ Each company files engineering roles under its own job family. If a title below 
 - **Fox** - [Engineering Manager, tvOS](https://fox.wd1.myworkdayjobs.com/en-US/Domestic/job/IND-KA-Bengaluru/Engineering-Manager--tvOS_R50033478-1)  
   IND-KA-Bengaluru
 
-- **GSK** - [Test -- Senior Manager - Planning & Forecasting Lead](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Test----Senior-Manager---Planning---Forecasting-Lead_449027)  
-  Bengaluru Luxor North Tower
+- **GSK** - [Assistant Legal Counsel](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bangalore/Assistant-Legal-Counsel_445813)  
+  Bangalore
 
 - **GSK** - [Associate Director - Sourcing - Global Process Owner](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Associate-Director---Source-to-Contract-Global-Process-Owner_448397)  
   Bengaluru Luxor North Tower
@@ -654,9 +669,6 @@ Each company files engineering roles under its own job family. If a title below 
   Bengaluru Luxor North Tower
 
 - **GSK** - [Senior Analyst / Lead / Senior Lead - Purchase to Pay Regional Implementation](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Analyst---Lead---Senior-Lead---Purchase-to-Pay-Regional-Implementation_447933)  
-  Bengaluru Luxor North Tower
-
-- **GSK** - [Senior Manager - Procurement](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Manager---Procurement_448377-1)  
   Bengaluru Luxor North Tower
 
 - **GSK** - [Director - Finance and Procurement MDM CoE](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Director---Finance-and-Procurement-MDM-CoE_448068-1)  
@@ -695,50 +707,44 @@ Each company files engineering roles under its own job family. If a title below 
 - **GSK** - [Senior Analyst / Lead / Senior Lead – Planning & Forecasting Analyst](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Analyst---Lead---Senior-Lead---Planning---Forecasting-Analyst_448310)  
   Bengaluru Luxor North Tower
 
-- **GSK** - [Senior Manager - Procure to Pay Service Delivery Lead (SDL) APAC](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Senior-Manager---Procure-to-Pay-Service-Delivery-Lead--SDL--APAC_447732)  
-  Bengaluru Luxor North Tower
-
-- **GSK** - [Director-Planning & Forecasting](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Director-Planning---Forecasting_448296)  
-  Bengaluru Luxor North Tower
-
-- **GSK** - [Director- Digital, Data and Analytics - WREF](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Director--Digital--Data-and-Analytics---WREF_448546)  
-  Bengaluru Luxor North Tower
-
 - **GSK** - [Sr. Principal Engineer – Azure Cloud, Integrations & Platforms](https://gsk.wd5.myworkdayjobs.com/en-US/GSKCareers/job/Bengaluru-Luxor-North-Tower/Sr-Principal-Engineer---Azure-Cloud--Integrations---Platforms_448349)  
   Bengaluru Luxor North Tower
 
-- **JPMC** - [Presentations Analyst (Graphic Designer)-Global Corporate Finance Operations - Bangalore](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210747614)  
+- **JPMC** - [Control Manager - Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210743905)  
   Bengaluru, Karnataka, India
 
-- **JPMC** - [Lead Security Engineer - Threat modelling, Cloud Security](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210758537)  
+- **JPMC** - [Control Manager - Senior Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210767358)  
   Bengaluru, Karnataka, India
 
-- **JPMC** - [Applied AI ML Director](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210773687)  
+- **JPMC** - [AI Agents Applied Research/Engineering Lead - Executive Director](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210768428)  
   Bengaluru, Karnataka, India
 
-- **JPMC** - [Lead Software Engineer- Salesforce](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210784415)  
-  Hyderabad, Telangana, India
+- **JPMC** - [Executive Director - Customer Success](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210781949)  
+  Bengaluru, Karnataka, India
 
 - **JPMC** - [Senior Manager of Software Engineering - Java, AWS, AI](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210785306)  
   Hyderabad, Telangana, India
 
-- **JPMC** - [Incremental Implementation Analyst](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210788586)  
+- **JPMC** - [External Reporting Controller - Analyst](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210788761)  
   Bengaluru, Karnataka, India
 
-- **JPMC** - [Applied AI ML Senior Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210788790)  
+- **JPMC** - [Product Delivery Manager - Infrastructure Platforms](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210790249)  
   Bengaluru, Karnataka, India
 
-- **JPMC** - [Senior Manager of Software Engineering](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210792857)  
+- **JPMC** - [Technology Support Lead](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210793625)  
   Hyderabad, Telangana, India
 
-- **JPMC** - [Product Manager](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210793227)  
+- **JPMC** - [Analytics Solutions Senior Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210795433)  
+  Bengaluru, Karnataka, India
+
+- **JPMC** - [Lead Infrastructure Engineer (SDWAN)](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210796461)  
+  Bengaluru, Karnataka, India
+
+- **JPMC** - [Senior Product Associate - Legal Regulatory Compliance](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210796637)  
   Hyderabad, Telangana, India
 
-- **JPMC** - [Senior Product Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210793929)  
-  Bengaluru, Karnataka, India
-
-- **JPMC** - [Fund Servicing Associate](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210794783)  
-  Bengaluru, Karnataka, India
+- **JPMC** - [Product Delivery Analyst](https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch/job/210795341)  
+  Hyderabad, Telangana, India
 
 - **Mastercard** - [Director Data Engineering](https://mastercard.wd1.myworkdayjobs.com/en-US/CorporateCareers/job/Hyderabad-India/Director-Data-Engineering_R-291968)  
   Hyderabad, India
@@ -771,6 +777,9 @@ Each company files engineering roles under its own job family. If a title below 
   India, Bengaluru
 
 - **NVIDIA** - [Verification Engineer - PCIE](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/India-Bengaluru/Verification-Engineer---PCIE_JR2023400)  
+  India, Bengaluru
+
+- **NVIDIA** - [Verification Engineer, PCIE](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/India-Bengaluru/Verification-Engineer--PCIE_JR2025159)  
   India, Bengaluru
 
 - **NVIDIA** - [Verification Engineer - HWPM](https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/India-Bengaluru/Verification-Engineer---HWPM_JR2000528)  
@@ -848,6 +857,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **Razorpay** - [Product Manager II - AI](https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4699107005)  
   Bengaluru
 
+- **Razorpay** - [Senior Associate, HRBP Operations](https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4739576005)  
+  Bengaluru
+
 - **Razorpay** - [Senior Executive, Finance](https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4731060005)  
   Bengaluru
 
@@ -863,6 +875,15 @@ Each company files engineering roles under its own job family. If a title below 
 - **Razorpay** - [Technical Account Manager](https://job-boards.greenhouse.io/razorpaysoftwareprivatelimited/jobs/4736154005)  
   Bengaluru
 
+- **Salesforce** - [AI/ML Senior Technical Architect(Salesforce experience is a must)](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Agentforce-Senior-Technical-Architect-Salesforce-experience-is-a-must-_JR359514-1)  
+  India - Bangalore
+
+- **Salesforce** - [Business Development Representative](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Business-Development-Representative_JR362074)  
+  India - Bangalore
+
+- **Salesforce** - [Business Analyst, Q2C Rapid Delivery](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Business-Analyst--Q2C-Rapid-Delivery_JR361417)  
+  India - Hyderabad
+
 - **Salesforce** - [Associate proactive Monitoring Engineer](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Associate-proactive-Monitoring-Engineer_JR341087-2)  
   India - Hyderabad
 
@@ -871,12 +892,6 @@ Each company files engineering roles under its own job family. If a title below 
 
 - **Salesforce** - [Sales Strategy Manager](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Sales-Strategy-Manager_JR362152)  
   India - Bangalore
-
-- **Salesforce** - [Technical Architect](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Bangalore/Technical-Architect_JR362084-1)  
-  India - Bangalore
-
-- **Salesforce** - [Tax Senior Analyst](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Tax-Senior-Analyst_JR357579)  
-  India - Hyderabad
 
 - **Salesforce** - [Senior Technical Consultant](https://salesforce.wd12.myworkdayjobs.com/en-US/External_Career_Site/job/India---Hyderabad/Senior-Technical-Consultant_JR362083)  
   India - Hyderabad
@@ -914,23 +929,32 @@ Each company files engineering roles under its own job family. If a title below 
 - **ServiceNow** - [Senior Workday Integration Developer](https://jobs.smartrecruiters.com/ServiceNow/744000151601954)  
   Hyderabad, Telangana, in
 
+- **Takeda** - [Systems, Engineer V](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Systems--Engineer-V_R0190996)  
+  IND - Bengaluru
+
+- **Takeda** - [Full Stack Developer](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Full-Stack-Developer_R0191152)  
+  IND - Bengaluru
+
+- **Takeda** - [Operational Excellence Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Operational-Excellence-Manager_R0191160)  
+  IND - Bengaluru
+
+- **Takeda** - [Product Owner (SBE)](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Product-Owner--SBE-_R0191157)  
+  IND - Bengaluru
+
 - **Takeda** - [Senior Principal Pharmacovigilance Scientist](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Senior-Principal-Pharmacovigilance-Scientist_R0190052)  
   IND - Bengaluru - Research and Development
-
-- **Takeda** - [Data Engineering Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Data-Engineering-Manager_R0180530)  
-  IND - Bengaluru
-
-- **Takeda** - [Digital Product, Senior Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Digital-Product--Senior-Manager_R0189192)  
-  IND - Bengaluru
-
-- **Takeda** - [Product Owner Global Transparency Reporting](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Product-Owner-Global-Transparency-Reporting_R0189876)  
-  IND - Bengaluru
 
 - **Takeda** - [Agile Capability Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Agile-Capability-Lead_R0190989)  
   IND - Bengaluru
 
 - **Takeda** - [Senior Scientist, translational Biomarkers and Bioanalytics](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Senior-Scientist--translational-Biomarkers-and-Bioanalytics_R0187357-1)  
   IND - Bengaluru - Research and Development
+
+- **Takeda** - [Digital Product, Senior Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Digital-Product--Senior-Manager_R0189192)  
+  IND - Bengaluru
+
+- **Takeda** - [Product Owner Global Transparency Reporting](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Product-Owner-Global-Transparency-Reporting_R0189876)  
+  IND - Bengaluru
 
 - **Takeda** - [Senior Director, Strategic Operations & Enablement and Data and Quantitative Sciences Site Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Senior-Director--Strategic-Operations---Enablement-and-Data-and-Quantitative-Sciences-Site-Lead_R0190130)  
   IND - Bengaluru - Research and Development
@@ -980,9 +1004,6 @@ Each company files engineering roles under its own job family. If a title below 
 - **Takeda** - [HR Generalist](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/HR-Generalist_R0190698)  
   IND - Bengaluru
 
-- **Takeda** - [ServiceNow UX Developer](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/ServiceNow-UX-Developer_R0179410)  
-  IND - Bengaluru
-
 - **Takeda** - [Sourcing Manager](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Sourcing-Manager_R0186604)  
   IND - Bengaluru
 
@@ -1001,12 +1022,6 @@ Each company files engineering roles under its own job family. If a title below 
 - **Takeda** - [Manager, Clinical Data Scientist](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Manager--Clinical-Data-Scientist_R0187147)  
   IND - Bengaluru - Research and Development
 
-- **Takeda** - [Sourcing Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Sourcing-Lead_R0186603-1)  
-  IND - Bengaluru
-
-- **Takeda** - [Senior Director, Quantitative Clinical Pharmacology Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Senior-Director--Quantitative-Clinical-Pharmacology-Lead_R0189742)  
-  IND - Bengaluru - Research and Development
-
 - **Takeda** - [Director, Takeda Bengaluru Site Communications Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Director--Takeda-Bengaluru-Site-Communications-Lead_R0189298)  
   IND - Bengaluru
 
@@ -1018,6 +1033,9 @@ Each company files engineering roles under its own job family. If a title below 
 
 - **Takeda** - [Director - Global Regulatory Affairs CMC](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru---Research-and-Development/Director---Global-Regulatory-Affairs-CMC_R0189731)  
   IND - Bengaluru - Research and Development
+
+- **Takeda** - [Sr Product Owner](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Sr-Product-Owner_R0190902)  
+  IND - Bengaluru
 
 - **Takeda** - [Design Delivery Lead](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Design-Delivery-Lead_R0190063)  
   IND - Bengaluru
@@ -1043,14 +1061,23 @@ Each company files engineering roles under its own job family. If a title below 
 - **Takeda** - [Manager, Access Data Products & AI Analytics](https://takeda.wd502.myworkdayjobs.com/en-US/External/job/IND---Bengaluru/Manager--Access-Data-Products---AI-Analytics_R0182193)  
   IND - Bengaluru
 
-- **Target** - [Director Guest Service Center](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Director-Guest-Service-Center_R0000453730)  
+- **Target** - [Sr Engineer - Target India](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Sr-Engineer---Target-India_R0000475528)  
+  Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
+
+- **Target** - [Engineer - Target India](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Engineer---Target-India_R0000475525)  
+  Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
+
+- **Target** - [Sr Insights Analyst](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Sr-Insights-Analyst_R0000449013)  
+  Bangalore,India
+
+- **Target** - [Analyst Merch Payable](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Analyst-Merch-Payable_R0000449373)  
+  Bangalore,India
+
+- **Target** - [Sr Data Analyst](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Sr-Data-Analyst_R0000430856)  
   Bangalore,India
 
 - **Target** - [Sr Engineering Manager](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Sr-Engineering-Manager_R0000452216-1)  
   Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
-
-- **Target** - [Analyst Merch Payable](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Analyst-Merch-Payable_R0000449373)  
-  Bangalore,India
 
 - **Target** - [Sr Engineer - Managed Kubernetes](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Sr-Engineer---Managed-Kubernetes_R0000453849)  
   Bangalore,India
@@ -1073,17 +1100,11 @@ Each company files engineering roles under its own job family. If a title below 
 - **Target** - [Lead Engineer Managed Containers - Target India](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Lead-Engineer---Target-India_R0000443184-1)  
   Bangalore,India
 
-- **Target** - [Engineer](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Engineer_R0000453869)  
-  Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
-
 - **Target** - [Analyst PIM Ops](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Analyst-PIM-Ops_R0000473632)  
   Bangalore,India
 
 - **Target** - [Lead Inventory Specialist PIM Ops](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Lead-Inventory-Specialist-PIM-Ops_R0000474656)  
   Bangalore,India
-
-- **Target** - [Sr Engineer - Target India](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Sr-Engineer---Target-India_R0000453981)  
-  Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
 
 - **Target** - [Lead Fullstack Engineer- Advanced AI](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Lead-Fullstack-Engineer--Advanced-AI_R0000441608)  
   Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
@@ -1094,17 +1115,8 @@ Each company files engineering roles under its own job family. If a title below 
 - **Target** - [Director of Product Management](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Director-of-Product-Management_R0000449194)  
   Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
 
-- **Target** - [Sr manager accounting](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Sr-manager-accounting_R0000475491)  
-  Bangalore,India
-
 - **Target** - [Sr Process & Quality Consultant](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Data-Analyst_R0000429665)  
   Bangalore,India
-
-- **Target** - [Director Product Management](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Tower-02-Manyata-Embassy-Business-Park-Racenahali--Nagawara-Villages-Outer-Ring-Rd-Bangalore-540065/Director-Product-Management_R0000448638)  
-  Tower 02, Manyata Embassy Business Park, Racenahali & Nagawara Villages. Outer Ring Rd, Bangalore 540065
-
-- **Target** - [Lead Specialist Assets Management-1](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/Embassy-Manyata-Business-Park-Bengaluru-KA-560045/Lead-Specialist-Assets-Management-1_R0000475659)  
-  Embassy Manyata Business Park, Bengaluru, KA 560045
 
 - **Target** - [Sr Engineer](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Sr-Engineer_R0000443998)  
   Bangalore,India
@@ -1169,10 +1181,19 @@ Each company files engineering roles under its own job family. If a title below 
 - **Target** - [Lead Engineer](https://target.wd5.myworkdayjobs.com/en-US/targetcareers/job/BangaloreIndia/Lead-Engineer_R0000434696-1)  
   Bangalore,India
 
-- **Visa** - [Senior Manager - Card Portfolio Optimization Consulting](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Senior-Manager---Card-Portfolio-Optimization-Consulting_REF088857W)  
+- **Visa** - [Senior Manager - Card Portfolio Optimization Consulting, VCA X](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Senior-Manager---Card-Portfolio-Optimization-Consulting_REF088857W)  
   IN - Bengaluru, India
 
-- **Visa** - [Manager - Card Portfolio Optimization Consulting](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Manager---Card-Portfolio-Optimization-Consulting_REF088858W)  
+- **Visa** - [Manager - Card Portfolio Optimization Consulting, VCA X](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Manager---Card-Portfolio-Optimization-Consulting_REF088858W)  
+  IN - Bengaluru, India
+
+- **Visa** - [Sr. Manager, Finance Operations (Accounts Payable)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-Manager--Finance-Operations--Accounts-Payable-_REF089035W)  
+  IN - Bengaluru, India
+
+- **Visa** - [Accountant (Exp in T&E card program)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Accountant--Exp-in-T-E-card-program-_REF089033W)  
+  IN - Bengaluru, India
+
+- **Visa** - [Staff SW Engineer (7 - 9 years of exp in Python, React / Angular, strong GenAI solution development, Claude, LLM)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Staff-SW-Engineer--7---9-years-of-exp-in-Python--React---Angular--strong-GenAI-solution-development--Claude--LLM-_REF088256W)  
   IN - Bengaluru, India
 
 - **Visa** - [Staff SW Engineer (6+, Golang, AWS)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Staff-SW-Engineer--6---Golang--AWS-_REF089020W)  
@@ -1232,15 +1253,6 @@ Each company files engineering roles under its own job family. If a title below 
 - **Visa** - [Sr. SW Engineer (3 - 6 years of experience as a Full-stack Developer - .Net , React / Angular, GenAI)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-SW-Engineer--3---6-years-of-experience-as-a-Full-stack-Developer---Net---React---Angular--GenAI-_REF088228W)  
   IN - Bengaluru, India
 
-- **Visa** - [Senior Manager, Travel](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Senior-Manager--Travel_REF088624W)  
-  IN - Bengaluru, India
-
-- **Visa** - [Associate Cybersecurity Analyst](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Associate-Cybersecurity-Analyst_REF088190W)  
-  IN - Bengaluru, India
-
-- **Visa** - [Senior Systems Engineer- - Linux Engineering, RHEL, Rocky, Ubuntu, Automation (3 - 6 years)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Senior-Systems-Engineer----Linux-Engineering--RHEL--Rocky--Ubuntu--Automation--3---6-years-_REF088537W-1)  
-  IN - Bengaluru, India
-
 - **Visa** - [Sr. SW Engineer - (3-5 yrs of experience, Endpoint Engineering – Software & Hardware QA Automation using Agentic AI Development, SRE/Reliability)](https://visa.wd5.myworkdayjobs.com/en-US/Visa/job/IN---Bengaluru-India/Sr-SW-Engineer---Agentic-Developer--Java-Python--3-5-yrs-of-experience-_REF083019W)  
   IN - Bengaluru, India
 
@@ -1286,6 +1298,9 @@ Each company files engineering roles under its own job family. If a title below 
 - **Wells Fargo** - [Principal Engineer - Gen AI, LLM, RAG, Agentic AI](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Principal-Engineer---Gen-AI_R-566518-1)  
   Bengaluru, India
 
+- **Wells Fargo** - [Technology Director - Financial Crimes Risk Management Technology](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Technology-Director---Financial-Crimes-Risk-Management-Technology_R-570921)  
+  Hyderabad, India
+
 - **Wells Fargo** - [Senior Lead Analytics Consultant](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Lead-Analytics-Consultant_R-564082-1)  
   Bengaluru, India
 
@@ -1298,16 +1313,16 @@ Each company files engineering roles under its own job family. If a title below 
 - **Wells Fargo** - [Sr risk Analytics Consultant - Credit risk strategy](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Sr-risk-Analytics-Consultant---Credit-risk-strategy_R-564952-1)  
   Bengaluru, India
 
-- **Wells Fargo** - [Senior Analytics Consultant](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Analytics-Consultant_R-576010-1)  
-  Bengaluru, India
+- **Wells Fargo** - [Senior Analytics Consultant](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Analytics-Consultant_R-574273-1)  
+  Hyderabad, India
 
 - **Wells Fargo** - [Senior Network Engineer.](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Network-Engineer_R-564925-1)  
   Bengaluru, India
 
-- **Wells Fargo** - [Senior Information Security Engineer](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Information-Security-Engineer_R-564930-1)  
+- **Wells Fargo** - [Lead Systems Operations Engineer](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Lead-Systems-Operations-Engineer_R-561041)  
   Hyderabad, India
 
-- **Wells Fargo** - [Lead Systems Operations Engineer - Mainframe](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Lead-Systems-Operations-Engineer---Mainframe_R-579033)  
+- **Wells Fargo** - [Senior Information Security Engineer](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Information-Security-Engineer_R-564930-1)  
   Hyderabad, India
 
 - **Wells Fargo** - [Senior Information Security Engineer - Ping Directory](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Information-Security-Engineer---Ping-Directory_R-578494)  
@@ -1319,17 +1334,14 @@ Each company files engineering roles under its own job family. If a title below 
 - **Wells Fargo** - [Network Engineer - NOC Operations](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Network-Engineer---NOC-Operations_R-577845)  
   Hyderabad, India
 
-- **Wells Fargo** - [Lead Systems Operations Engineer](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Lead-Systems-Operations-Engineer_R-564834-1)  
-  Bengaluru, India
-
 - **Wells Fargo** - [Lead Systems Operations Engineer - Production Support](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Lead-Systems-Operations-Engineer_R-566517-1)  
   Bengaluru, India
 
 - **Wells Fargo** - [Senior Lead Systems Operations Engineer - Windows Administration](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Lead-Systems-Operations-Engineer---Windows-Administration_R-576270)  
   Bengaluru, India
 
-- **Wells Fargo** - [Systems Operations Senior Manager -  Production Operations, AIOps, MLOps](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Systems-Operations-Senior-Manager----Production-Operations--AIOps--MLOps_R-573836-1)  
-  Bengaluru, India
+- **Wells Fargo** - [Software Engineering Senior Manager (Ab initio ETL, Hadoop, OCP, AI Automation)](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Software-Engineering-Senior-Manager--Ab-initio-ETL--Hadoop--OCP--AI-Automation-_R-577536-1)  
+  Hyderabad, India
 
 - **Wells Fargo** - [Lead Information Security Engineer-  Architect](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Lead-Information-Security-Engineer---Architect_R-571297)  
   Bengaluru, India
@@ -1340,23 +1352,26 @@ Each company files engineering roles under its own job family. If a title below 
 - **Wells Fargo** - [Lead Information Security Engineer - Cloud Security](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Lead-Information-Security-Engineer---Cloud-Security_R-578287)  
   Bengaluru, India
 
+- **Wells Fargo** - [Senior Infrastructure Engineer - Trader Voice (Unigy-Cloud9)](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Infrastructure-Engineer---Trader-Voice--Unigy-Cloud9-_R-573232)  
+  Bengaluru, India
+
 - **Wells Fargo** - [Lead Scrum Master](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Lead-Scrum-Master_R-578665)  
   Hyderabad, India
 
 - **Wells Fargo** - [Senior Quantitative Analytics Specialist ( Gen AI)](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Quantitative-Analytics-Specialist_R-564114)  
   Hyderabad, India
 
-- **Wells Fargo** - [Senior Lead Digital Product Manager – Access & Entitlements Platform](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Lead-Digital-Product-Manager---Access---Entitlements-Platform_R-577570-1)  
+- **Wells Fargo** - [Business Execution Consultant](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Business-Execution-Consultant_R-571045)  
   Bengaluru, India
 
 - **Wells Fargo** - [Head of AI, Innovation and Modeling-India and Philippines](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Head-of-AI--Innovation-and-Modeling-India-and-Philippines_R-574055)  
   Bengaluru, India
 
-- **Wells Fargo** - [Lead Digital Product Manager - CIAM](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Lead-Digital-Product-Manager---CIAM_R-577571-1)  
+- **Wells Fargo** - [Senior Business Execution Consultant](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Business-Execution-Consultant_R-543246-1)  
   Bengaluru, India
 
-- **Wells Fargo** - [Senior Institutional Investment Operations Representative](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Institutional-Investment-Operations-Representative_R-567413-1)  
+- **Wells Fargo** - [Senior Digital Product Manager](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Digital-Product-Manager_R-567333)  
   Hyderabad, India
 
-- **Wells Fargo** - [Senior Product Manager](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Bengaluru-India/Senior-Product-Manager_R-575518-1)  
-  Bengaluru, India
+- **Wells Fargo** - [Senior Institutional Investment Operations Representative](https://wf.wd1.myworkdayjobs.com/en-US/WellsFargoJobs/job/Hyderabad-India/Senior-Institutional-Investment-Operations-Representative_R-571948)  
+  Hyderabad, India
